@@ -480,9 +480,8 @@
                     } else {
                         settings.onDoubleClickDate(date);
                     }
-                },300)
+                }, 300)
             }
-
         });
 
 
