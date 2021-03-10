@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "tui-calendar@1.13.0",
+      "destination": "wwwroot/tui-calendar/"
+    },
+    {
+      "library": "font-awesome@5.15.2",
+      "destination": "wwwroot/lib/fontawesome/font-awesome/"
+    },
+    {
+      "library": "izimodal@1.5.1",
+      "destination": "wwwroot/lib/izimodal/"
+    }
+  ]
+}
