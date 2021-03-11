@@ -9,6 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
+using Quartz.Impl;
+using CalWebApi.Scheduler;
 
 namespace CalWebApi
 {
@@ -26,6 +28,9 @@ namespace CalWebApi
         {
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddSwaggerGen();
+            var scheduler = StdSchedulerFactory.GetDefaultScheduler().GetAwaiter().GetResult();
+            services.AddSingleton(scheduler);
+            services.AddHostedService<CalShedulerHostedService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

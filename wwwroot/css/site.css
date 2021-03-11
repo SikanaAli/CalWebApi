@@ -81,8 +81,20 @@ body {
                                   supported by Chrome and Opera */
 }
 
-//Heights
+/*Heights*/
 
 .vh-65{
     height:65vh!important;
+}
+
+/*Shedual Task form*/
+.cron-container > div {
+   justify-content:space-around;
+   padding-right: 2rem
+}
+
+
+
+.cron-minutes{
+
 }

@@ -20,8 +20,70 @@
             <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
         </div>
         <div class="form-group">
-            <label for="exampleInputPassword1">datetime</label>
-            <input type="datetime-local" class="form-control" id="exampleInputPassword1" placeholder="@DateTime.Now.ToString("f")">
+
+            <div class="form-row cron-container">
+                <div>
+                    <strong>Hours</strong>
+                    <select multiple="multiple" size="12" class="form-control form-" id="cron-hours" name="cron-hours">
+                        @for(int i=0;i<24;i++){
+                        <option value="@i">@{if(i < 10){ <p>0</p>@i }else{@i}}</option>
+                    }
+                    </select>
+                    <a href="javascript:cronHelperSelectAll('#cron-minutes')">select all</a>
+                </div>
+                <div>
+                    <strong>Minutes</strong>
+                    <select multiple="multiple" size="12" class="form-control" id="cron-minutes" name="cron-minutes">
+                        @for(int i=0;i<60;i++){
+                        <option value="@i">@{if(i < 10){ <p>0</p>@i }else{@i}}</option>
+                    }
+                    </select>
+                    <a href="javascript:cronHelperSelectAll('#cron-minutes')">select all</a>
+                </div>
+
+                <div>
+                    <strong>Days in Month</strong>
+                    <select multiple="multiple" size="12" class="form-control" id="cron-dim" name="cron-dim">
+                        @for(int i=0;i<60;i++){
+                        <option value="@i">@{if(i < 10){ <p>0</p>@i }else{@i}}</option>
+                    }
+                    </select>
+                    <a href="javascript:cronHelperSelectAll('#cron-dim')">select all</a>
+                </div>
+                <div>
+                    <strong>Months</strong>
+                    <select multiple="multiple" size="12" class="form-control" id="cron-months" name="cron-months">
+                        @{
+                            @using System.Globalization;
+
+                            for(int i=0; i<=12; i++)
+                            {
+                            <option value="@i">@DateTimeFormatInfo.CurrentInfo.MonthNames[i]</option>
+                            }
+                        }
+                    </select>
+                    <a href="javascript:cronHelperSelectAll('#cron-dim')">select all</a>
+                </div>
+                @*<div>
+                    <strong>Days in Week</strong>
+                    <select multiple="multiple" size="12" class="form-control" id="cron-months" name="cron-months">
+                        @{
+                            @using System.Globalization;
+
+                            for(int i=0; i<=7; i++)
+                            {
+                            <option value="@i">@DateTimeFormatInfo.CurrentInfo.DayNames[i]</option>
+                            }
+                        }
+                    </select>
+                    <a href="javascript:cronHelperSelectAll('#cron-dim')">select all</a>
+                </div>*@
+            </div>
+            
+
+
+            <label for="exampleInputPassword1">Task Schedule</label>
+            <input type="text" readonly class="form-control" id="exampleInputPassword1" placeholder="@DateTime.Now.ToString("f")">
         </div>
         <div class="form-group form-check">
             <input type="checkbox" class="form-check-input" id="exampleCheck1">
