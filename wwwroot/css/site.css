@@ -88,13 +88,12 @@ body {
 }
 
 /*Shedual Task form*/
-.cron-container > div {
-   justify-content:space-around;
-   padding-right: 2rem
+.cron-container {
+   justify-content:space-evenly;
 }
 
 
 
-.cron-minutes{
-
+.cron-items{
+    text-align:center;
 }

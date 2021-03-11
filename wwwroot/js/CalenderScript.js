@@ -28,6 +28,10 @@ $('.day').addClass('noselect');
 
 //Calender Modal
 $("#calendar-modal").iziModal({
-    padding: "2rem",
-    radius:5,
+    title:"<strong>Create New Task</strong>",
+    padding: "1rem",
+    radius: 5,
+    width:"60%",
+    fullscreen: true,
+    theme:"light",
 });
