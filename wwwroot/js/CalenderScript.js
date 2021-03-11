@@ -32,6 +32,7 @@ $("#calendar-modal").iziModal({
     padding: "1rem",
     radius: 5,
     width:"60%",
-    fullscreen: true,
-    theme:"light",
+    fullscreen: false,
+    theme: "light",
+    appendToOverlay:'body',
 });
