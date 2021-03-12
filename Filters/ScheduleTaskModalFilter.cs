@@ -15,20 +15,8 @@ namespace CalWebApi.Filters
             if (schema?.Properties == null)
                 return;
 
-            const BindingFlags bindingFlags = BindingFlags.Public |
-                                         BindingFlags.NonPublic |
-                                         BindingFlags.Instance;
-            //var memberList = context.Type
-            //                    .GetFields(bindingFlags).Cast<MemberInfo>()
-            //                    .Concat(context.Type
-            //                    .GetProperties(bindingFlags));
-
-            //var excludedList = memberList.Where(m =>
-            //                                    m.GetCustomAttribute<SwaggerExcludeAttribute>()
-            //                                    != null)
-            //                             .Select(m =>
-            //                                 (m.GetCustomAttribute<SwaggerExcludeAttribute>()
-            //                                  ?.TypeId.ToString() ?? m.Name.ToCamelCase()));
+           
+           
 
             var excludedProperties = context.Type.GetProperties()
                                          .Where(t =>
@@ -37,7 +25,7 @@ namespace CalWebApi.Filters
 
             foreach (var excludedProperty in excludedProperties)
             {
-                System.Diagnostics.Debug.WriteLine("PROP => " + excludedProperty.Name);
+               
                 if (schema.Properties.ContainsKey(excludedProperty.Name.ToCamelCase()))
                     schema.Properties.Remove(excludedProperty.Name.ToCamelCase());
             }

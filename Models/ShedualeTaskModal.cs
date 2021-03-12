@@ -10,6 +10,7 @@ namespace CalWebApi.Models
         [SwaggerExclude]
         public int Id { get; set; }
 
+        [nullable]
         public string TaskName { get; set; }
 
         public DateTime DateCreated { get; set; }
