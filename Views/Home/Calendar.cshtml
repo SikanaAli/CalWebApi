@@ -12,7 +12,7 @@
 
 <div id="calendar" class="noselect">
 </div>
-<div id="calendar-modal" class="" style="width:75%">
+<div id="calendar-modal" class="" >
     <form>
         <div class="form-group">
             <label for="cron-task-name">Task Name</label>
@@ -24,7 +24,7 @@
             <div class="form-row cron-container">
                 <div class="cron-items">
                     <h6>Hours</h6>
-                    <select multiple="multiple" size="12" class="form-control form-" id="cron-hours" name="cron-hours" onchange="updateField('hours')">
+                    <select multiple="multiple" size="7" class="form-control form-" id="cron-hours" name="cron-hours" onchange="updateField('hours')">
                         @for (int i = 0; i < 24; i++)
                         {
                             <option selected="selected" value="@i">
@@ -41,7 +41,7 @@
                 </div>
                 <div class="cron-items">
                     <h6>Minutes</h6>
-                    <select multiple="multiple" size="12" class="form-control" id="cron-minutes" name="cron-minutes" onchange="updateField('minutes')">
+                    <select multiple="multiple" size="7" class="form-control" id="cron-minutes" name="cron-minutes" onchange="updateField('minutes')">
                         @for (int i = 0; i < 60; i++)
                         {
                             <option selected="selected" value="@i">
@@ -59,7 +59,7 @@
 
                 <div class="cron-items">
                     <h6>Days in Month</h6>
-                    <select multiple="multiple" size="12" class="form-control" id="cron-dim" name="cron-dim" onchange="updateField('dom')">
+                    <select multiple="multiple" size="7" class="form-control" id="cron-dim" name="cron-dim" onchange="updateField('dim')">
                         @for (int i = 0; i < 60; i++)
                         {
                             <option selected="selected" value="@i">
@@ -76,7 +76,7 @@
                 </div>
                 <div class="cron-items">
                     <h6>Months</h6>
-                    <select multiple="multiple" size="12" class="form-control" id="cron-months" name="cron-months" updateField('months')>
+                    <select multiple="multiple" size="7" class="form-control" id="cron-months" name="cron-months" onchange="updateField('months')">
                         @{
                             for (int i = 0; i < 12; i++)
                             {
@@ -90,7 +90,7 @@
                 </div>
                 <div class="cron-items">
                     <h6>Days in Week</h6>
-                    <select multiple="multiple" size="12" class="form-control" id="cron-days" name="cron-days" updateField('dow')>
+                    <select multiple="multiple" size="7" class="form-control" id="cron-days" name="cron-days" onchange="updateField('diw')">
                         @{
                             for (int i = 0; i <= 6; i++)
                             {
@@ -110,10 +110,11 @@
             </div>
             <hr />
         </div>
-        <div class="form-group form-check">
-            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+        <div class="">
+            <label class="" for="exampleCheck1">Check me out</label>
+            <textarea type="text" class="form-control" id="cron-description" rows="4"></textarea>
         </div>
+            
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>

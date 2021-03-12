@@ -9,8 +9,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Quartz.Impl;
 using CalWebApi.Scheduler;
+using Microsoft.AspNetCore.Mvc;
+using CalWebApi.Filters;
 
 namespace CalWebApi
 {
@@ -27,7 +30,15 @@ namespace CalWebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
-            services.AddSwaggerGen();
+            services.AddApiVersioning(v=> 
+            {
+                v.DefaultApiVersion = new ApiVersion(1, 0);
+                v.AssumeDefaultVersionWhenUnspecified = true;
+                v.ReportApiVersions = true;
+            });
+            services.AddSwaggerGen(S=> {
+                S.SchemaFilter<ScheduleTaskModalFilter>();
+            });
             var scheduler = StdSchedulerFactory.GetDefaultScheduler().GetAwaiter().GetResult();
             services.AddSingleton(scheduler);
             services.AddHostedService<CalShedulerHostedService>();
@@ -55,6 +66,7 @@ namespace CalWebApi
             app.UseSwaggerUI(ui=> {
                 ui.SwaggerEndpoint("/swagger/v1/swagger.json", "Cal API");
                 ui.RoutePrefix = "Doc";
+                
             });
 
             app.UseRouting();

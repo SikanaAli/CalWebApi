@@ -28,11 +28,15 @@ $('.day').addClass('noselect');
 
 //Calender Modal
 $("#calendar-modal").iziModal({
-    title:"<strong>Create New Task</strong>",
-    padding: "1rem",
+    title:"<strong>Scheduale New Task</strong>",
+    padding: "2rem",
     radius: 5,
     width:"60%",
-    fullscreen: false,
+    fullscreen: true,
     theme: "light",
-    appendToOverlay:'body',
+    appendToOverlay: 'body',
+    
+    left: 0,
+    right: 0,
+    
 });

@@ -6,9 +6,9 @@ var cron_dow = "*";
 
 var cron_minutes_id = "#cron-minutes";
 var cron_hours_id = "#cron-hours";
-var cron_dom_id = "#cron-dom";
+var cron_dom_id = "#cron-dim";
 var cron_months_id = "#cron-months";
-var cron_dow_id = "#cron-dow";
+var cron_dow_id = "#cron-days";
 var cron_output_id = "#cron-output";
 /// }}}
 /** {{{ Convert a list of values to cron-syntax
@@ -158,13 +158,13 @@ function updateField(type) {
 		case "minutes":
 			cron_minutes = cronCalculate(true, 59, getSelectedElements(cron_minutes_id));
 			break;
-		case "dom":
+		case "dim":
 			cron_dom = cronCalculate(false, 31, getSelectedElements(cron_dom_id));
 			break;
 		case "months":
 			cron_months = cronCalculate(false, 12, getSelectedElements(cron_months_id));
 			break;
-		case "dow":
+		case "diw":
 			cron_dow = cronCalculate(true, 6, getSelectedElements(cron_dow_id));
 			break;
 	}
