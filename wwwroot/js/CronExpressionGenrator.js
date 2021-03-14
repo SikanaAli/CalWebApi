@@ -10,6 +10,7 @@ var cron_dom_id = "#cron-dim";
 var cron_months_id = "#cron-months";
 var cron_dow_id = "#cron-days";
 var cron_output_id = "#cron-output";
+var cron_expr_desc = "#cron-expression-desc"
 /// }}}
 /** {{{ Convert a list of values to cron-syntax
  * @param bool zeroAllowed  weather the number zero is allowed (true) or not
@@ -169,6 +170,7 @@ function updateField(type) {
 			break;
 	}
 	$(cron_output_id).val(getCronExpression);
+	$(cron_expr_desc).text(cronstrue.toString($(cron_output_id).val()));
 } // }}}
 /** Set the fields to a given template {{{
  * @param id the templates ID (see comments)

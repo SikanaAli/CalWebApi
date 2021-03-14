@@ -28,7 +28,7 @@ $('.day').addClass('noselect');
 
 //Calender Modal
 $("#calendar-modal").iziModal({
-    title:"<strong>Scheduale New Task</strong>",
+    title:"<strong>Schedule New Task</strong>",
     padding: "2rem",
     radius: 5,
     width:"60%",
@@ -39,4 +39,16 @@ $("#calendar-modal").iziModal({
     left: 0,
     right: 0,
     
+});
+
+
+//Form Validattion
+
+jQuery.validator.setDefaults({
+    debug: true,
+    success: "valid"
+});
+$("#SubmitTask").click((e) => {
+    e.preventDefault();
+    console.log(e);
 });
