@@ -31,9 +31,11 @@ namespace CalWebApi.Controllers
         /// <param name="task"></param>
         
         [HttpPost]
-        public void ScheduleTask([FromBody]ShedualeTaskModal task)
+        [ApiVersion("1.0")]
+        public ActionResult ScheduleTask([FromBody]ShedualeTaskModal task)
         {
-
+            Console.WriteLine(JObject.FromObject(task).ToString());
+            return Ok();
         }
     }
 }

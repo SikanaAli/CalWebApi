@@ -81,6 +81,11 @@ body {
                                   supported by Chrome and Opera */
 }
 
+/*Calendar*/
+.day>span:hover{
+    transform:scale(1.5,1.5);
+}
+
 /*Heights*/
 
 .vh-65{
@@ -92,6 +97,9 @@ body {
    justify-content:space-evenly;
 }
 
+.error{
+    color:red;
+}
 
 
 .cron-items{

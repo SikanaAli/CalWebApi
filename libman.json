@@ -63,6 +63,11 @@
         "dist/i18n/locale.d.ts",
         "dist/i18n/localeLoader.d.ts"
       ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "cron-validator@1.2.1",
+      "destination": "wwwroot/lib/cron-validator/"
     }
   ]
 }

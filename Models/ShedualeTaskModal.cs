@@ -18,6 +18,9 @@ namespace CalWebApi.Models
         [Required]
         public string CronExpression { get; set; }
 
+        [Required]
+        public string CallBackUrl { get; set; }
+
         public string Discription { get; set; }
     }
 }
