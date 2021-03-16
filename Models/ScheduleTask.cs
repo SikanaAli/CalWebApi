@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using CalWebApi.CustomAttributes;
 namespace CalWebApi.Models
 {
-    public class ShedualeTaskModal
+    public class ScheduleTask
     {
         [SwaggerExclude]
         public int Id { get; set; }

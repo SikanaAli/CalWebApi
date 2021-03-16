@@ -70,6 +70,7 @@ var Validator = $("#ScheduleTaskForm").validate({
         },
         "cron-output": {
             required: true,
+            
         },
         "cron-callback": {
             url: true
@@ -77,8 +78,25 @@ var Validator = $("#ScheduleTaskForm").validate({
     },
     submitHandler: (from) => {
 
+        var FormData = {
+            "taskName": $("#cron-task-name").val().trim().toString(),
+            "dateCreated": new Date().toISOString(),
+            "cronExpression": $("#cron-output").val().trim().toString(),
+            "callBackUrl": $("#cron-callback").val().trim().toString(),
+            "discription": $("#cron-description").val().trim().toString()
+        }
+        console.log(FormData)
         $.ajax({
-            url:"/"
-        })
+            url: "/api/v1/Scheduler/Task",
+            method: "POST",
+            contentType:"application/json",
+            data: JSON.stringify(FormData),
+            success: (result) => {
+                console.log(result)
+            },
+            error: (result) => {
+                console.log(result)
+            },
+        });
     }
 })

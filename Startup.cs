@@ -14,6 +14,8 @@ using Quartz.Impl;
 using CalWebApi.Scheduler;
 using Microsoft.AspNetCore.Mvc;
 using CalWebApi.Filters;
+using System.Reflection;
+using System.IO;
 
 namespace CalWebApi
 {
@@ -38,8 +40,15 @@ namespace CalWebApi
             });
             services.AddSwaggerGen(S=> {
                 S.SchemaFilter<ScheduleTaskModalFilter>();
+                
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                S.IncludeXmlComments(xmlPath);
             });
             var scheduler = StdSchedulerFactory.GetDefaultScheduler().GetAwaiter().GetResult();
+
+            
+
             services.AddSingleton(scheduler);
             services.AddHostedService<CalShedulerHostedService>();
         }
@@ -61,7 +70,10 @@ namespace CalWebApi
             app.UseStaticFiles();
 
 
-            app.UseSwagger();
+            app.UseSwagger(S=>
+            {
+                S.SerializeAsV2 = true;
+            });
 
             app.UseSwaggerUI(ui=> {
                 ui.SwaggerEndpoint("/swagger/v1/swagger.json", "Cal API");
