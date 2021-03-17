@@ -11,6 +11,8 @@ using Quartz;
 using Microsoft.AspNetCore.Http;
 using Swashbuckle.Swagger.Annotations;
 using Swashbuckle.AspNetCore.Filters;
+using CalWebApi.Scheduler;
+using Microsoft.Extensions.Logging;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -25,10 +27,12 @@ namespace CalWebApi.Controllers
     {
         //Readonly Vars
         private readonly IScheduler scheduler;
+        private readonly ILogger<TaskJob> logger;
         //Contructor
-        public SchedulerController(IScheduler _scheduler)
+        public SchedulerController(IScheduler _scheduler, ILogger<TaskJob> _logger)
         {
             scheduler = _scheduler;
+            logger = _logger;
         }
 
         // GET: api/<CalendarApiController>
@@ -66,13 +70,33 @@ namespace CalWebApi.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [SwaggerRequestExample(typeof(JObject),typeof(ScheduleTaskExample))]
-        public IActionResult ScheduleTask([FromBody]ScheduleTask task)
+        public async Task<IActionResult> ScheduleTask([FromBody]ScheduleTask task)
         {
             if (ModelState.IsValid)
             {
-                var ok = new JObject();
-                
-                return Created(Request.Path,"Task Scheduled");
+                if (CronExpression.IsValidExpression(task.CronExpression))
+                {
+                    if (scheduler.IsStarted)
+                    {
+                        //await scheduler.Start();
+                        
+                        var metadata = new TaskMetadata(Guid.NewGuid(), typeof(TaskJob),"TestTaskFromController", "0/10 * * * * ?");
+                        var Job = CreateJob(metadata);
+                        var trigger = CreateTrigger(metadata);
+
+                        
+                        await scheduler.ScheduleJob(Job, trigger);
+                        return Created(Request.Path, "Task Scheduled");
+                    }
+                    else
+                    {
+                        return BadRequest("Scheduler NotStarted");
+                    }
+                }
+                else
+                {
+                    return BadRequest("Invalid Cron");
+                }
             }
             else
             {
@@ -83,6 +107,23 @@ namespace CalWebApi.Controllers
 
                 return BadRequest(error.ToString());
             }
+        }
+
+        private ITrigger CreateTrigger(TaskMetadata jobMetadata)
+        {
+            return TriggerBuilder.Create()
+            .WithIdentity(jobMetadata.TaskId.ToString())
+            .WithCronSchedule(jobMetadata.CronExpression)
+            .WithDescription($"{jobMetadata.TaskName}")
+            .Build();
+        }
+        private IJobDetail CreateJob(TaskMetadata jobMetadata)
+        {
+            return JobBuilder
+            .Create(jobMetadata.TaskType)
+            .WithIdentity(jobMetadata.TaskId.ToString())
+            .WithDescription($"{jobMetadata.TaskName}")
+            .Build();
         }
     }
 }

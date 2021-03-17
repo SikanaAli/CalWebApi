@@ -16,14 +16,17 @@ using Microsoft.AspNetCore.Mvc;
 using CalWebApi.Filters;
 using System.Reflection;
 using System.IO;
+using Quartz;
 
 namespace CalWebApi
 {
     public class Startup
     {
+        private IScheduler _QuartzScheduler;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            //_QuartzScheduler = Configuer
         }
 
         public IConfiguration Configuration { get; }

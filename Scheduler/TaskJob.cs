@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 namespace CalWebApi.Scheduler
 {
     [DisallowConcurrentExecution]
-    public class ShcedulerJob : IJob
+    public class TaskJob : IJob
     {
-        private readonly ILogger<ShcedulerJob> _logger;
-
-        public ShcedulerJob(ILogger<ShcedulerJob> logger)
+        //private readonly ILogger<TaskJob> _logger;
+        public TaskJob()
         {
-            _logger = logger;
+           
         }
+
         public Task Execute(IJobExecutionContext context)
         {
-            _logger.LogInformation("FROM CONTROLLER JOB");
+            Console.WriteLine($"Task Executed @ {DateTime.Now}");
             return Task.CompletedTask;
         }
     }
