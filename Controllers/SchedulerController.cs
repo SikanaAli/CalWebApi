@@ -13,6 +13,7 @@ using Swashbuckle.Swagger.Annotations;
 using Swashbuckle.AspNetCore.Filters;
 using CalWebApi.Scheduler;
 using Microsoft.Extensions.Logging;
+using Quartz.Impl.Matchers;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -37,9 +38,35 @@ namespace CalWebApi.Controllers
 
         // GET: api/<CalendarApiController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<List<ScheduledTasks>> Get()
         {
-            return new string[] { "value1", "value2" };
+            IList<string> TaskGroups = (IList<String>)await scheduler.GetJobGroupNames();
+            List<ScheduledTasks> GetScheduledTasks = new List<ScheduledTasks>();
+            foreach (var group in TaskGroups)
+            {
+                var groupMatcher = GroupMatcher<JobKey>.GroupContains(group);
+                var TaskKeys = await scheduler.GetJobKeys(groupMatcher);
+                foreach (var Taskkey in TaskKeys)
+                {
+                    var detail = await scheduler.GetJobDetail(Taskkey);
+                    var triggers = await scheduler.GetTriggersOfJob(Taskkey);
+                    foreach (var trigger in triggers)
+                    {
+                        GetScheduledTasks.Add(new ScheduledTasks
+                        {
+                            Group = group,
+                            TaskKey = Taskkey.Name,
+                            TaskName = detail.Description,
+                            TriggerKey = trigger.Key.Name,
+                            NextFireTime = trigger.GetNextFireTimeUtc(),
+                            PreviousFireTime = trigger.GetPreviousFireTimeUtc()
+                        });
+                    }
+                }
+            }
+
+           
+            return GetScheduledTasks;
         }
 
 
@@ -80,8 +107,8 @@ namespace CalWebApi.Controllers
                     {
                         //await scheduler.Start();
                         
-                        var metadata = new TaskMetadata(Guid.NewGuid(), typeof(TaskJob),"TestTaskFromController", "0/10 * * * * ?");
-                        var Job = CreateJob(metadata);
+                        var metadata = new TaskMetadata(Guid.NewGuid(), typeof(TaskJob),task.Discription, task.CronExpression);
+                        var Job = CreateJob(metadata,task);
                         var trigger = CreateTrigger(metadata);
 
                         
@@ -109,6 +136,41 @@ namespace CalWebApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Schedule a new task
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /Task
+        ///     {
+        ///        "callBackUrl": "http://mysite.com/backup/logs", 
+        ///        "cronExpression": "5 * * * *",
+        ///        "dateCreated": "2021-03-16T03:23:46.217Z",
+        ///        "discription": "This is my task that does somthing",
+        ///        "taskName": "Do Somthing"
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns>Status code and messages wherer necessary</returns>
+        /// <param name="task"></param>
+        /// <response code="201">Reruns 201 status and 'Task Schdeuled'</response>
+        /// <response code="400">If the json is not stuctured well or invalid data</response>  
+        [HttpDelete]
+        [Route("Task")]
+        [ApiVersion("1.0")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [SwaggerRequestExample(typeof(JObject), typeof(ScheduleTaskExample))]
+        public IActionResult UnScheduleTask(string TaskId)
+        {
+            //Request.
+            return Ok();
+        }
+
+
+
+        //Task Creation Methods
         private ITrigger CreateTrigger(TaskMetadata jobMetadata)
         {
             return TriggerBuilder.Create()
@@ -117,10 +179,11 @@ namespace CalWebApi.Controllers
             .WithDescription($"{jobMetadata.TaskName}")
             .Build();
         }
-        private IJobDetail CreateJob(TaskMetadata jobMetadata)
+        private IJobDetail CreateJob(TaskMetadata jobMetadata, ScheduleTask task)
         {
             return JobBuilder
             .Create(jobMetadata.TaskType)
+            .UsingJobData("data",JObject.FromObject(task).ToString())
             .WithIdentity(jobMetadata.TaskId.ToString())
             .WithDescription($"{jobMetadata.TaskName}")
             .Build();

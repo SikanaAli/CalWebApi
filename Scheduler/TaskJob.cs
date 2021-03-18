@@ -1,9 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CalWebApi.Models;
+using Microsoft.Extensions.Logging;
 using Quartz;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Net;
 
 namespace CalWebApi.Scheduler
 {
@@ -18,7 +21,13 @@ namespace CalWebApi.Scheduler
 
         public Task Execute(IJobExecutionContext context)
         {
-            Console.WriteLine($"Task Executed @ {DateTime.Now}");
+            ScheduleTask data = JsonConvert.DeserializeObject<ScheduleTask>(context.JobDetail.JobDataMap.GetString("data"));
+
+            WebRequest request = WebRequest.Create(data.CallBackUrl);
+            WebResponse response = request.GetResponse();
+            var responseCode = ((HttpWebResponse)response).StatusDescription;
+            response.Close();
+            Console.WriteLine($"Task Executed @ {DateTime.Now} with Response {responseCode}");
             return Task.CompletedTask;
         }
     }

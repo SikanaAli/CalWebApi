@@ -18,7 +18,7 @@
     "CalWebApi": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://127.0.0.1:5001;http://127.0.0.1:5000",
+      "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
