@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace CalWebApi.Scheduler
 {
-    public class CalShedulerHostedService : IHostedService
+    public class SchedulerHostedService : IHostedService
     {
 
         private readonly IScheduler _scheduler;
 
-        public CalShedulerHostedService(IScheduler scheduler)
+        public SchedulerHostedService(IScheduler scheduler)
         {
             _scheduler = scheduler;
         }

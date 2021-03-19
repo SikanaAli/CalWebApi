@@ -43,17 +43,13 @@ namespace CalWebApi
             });
             services.AddSwaggerGen(S=> {
                 S.SchemaFilter<ScheduleTaskModalFilter>();
-                
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 S.IncludeXmlComments(xmlPath);
             });
             var scheduler = StdSchedulerFactory.GetDefaultScheduler().GetAwaiter().GetResult();
-
-            
-
             services.AddSingleton(scheduler);
-            services.AddHostedService<CalShedulerHostedService>();
+            services.AddHostedService<SchedulerHostedService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
