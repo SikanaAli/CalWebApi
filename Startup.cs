@@ -17,6 +17,7 @@ using CalWebApi.Filters;
 using System.Reflection;
 using System.IO;
 using Quartz;
+using System.Collections.Specialized;
 
 namespace CalWebApi
 {
@@ -26,7 +27,7 @@ namespace CalWebApi
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            //_QuartzScheduler = Configuer
+            _QuartzScheduler = ConfigurQuartz();
         }
 
         public IConfiguration Configuration { get; }
@@ -35,23 +36,30 @@ namespace CalWebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
-            services.AddApiVersioning(v=> 
+            services.AddApiVersioning(v =>
             {
                 v.DefaultApiVersion = new ApiVersion(1, 0);
                 v.AssumeDefaultVersionWhenUnspecified = true;
                 v.ReportApiVersions = true;
             });
-            services.AddSwaggerGen(S=> {
+            services.AddSwaggerGen(S =>
+            {
                 S.SchemaFilter<ScheduleTaskModalFilter>();
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 S.IncludeXmlComments(xmlPath);
             });
             var scheduler = StdSchedulerFactory.GetDefaultScheduler().GetAwaiter().GetResult();
-            services.AddSingleton(scheduler);
-            services.AddHostedService<SchedulerHostedService>();
+
+            services.AddSingleton(provider => _QuartzScheduler);
+            //services.AddHostedService<SchedulerHostedService>();
         }
 
+        private void OnShutdown()
+        {
+            //shutdown quratz if its not already shutdown
+            if (!_QuartzScheduler.IsShutdown) _QuartzScheduler.Shutdown();
+        }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -69,15 +77,16 @@ namespace CalWebApi
             app.UseStaticFiles();
 
 
-            app.UseSwagger(S=>
+            app.UseSwagger(S =>
             {
                 S.SerializeAsV2 = true;
             });
 
-            app.UseSwaggerUI(ui=> {
+            app.UseSwaggerUI(ui =>
+            {
                 ui.SwaggerEndpoint("/swagger/v1/swagger.json", "Cal API");
                 ui.RoutePrefix = "Doc";
-                
+
             });
 
             app.UseRouting();
@@ -90,6 +99,20 @@ namespace CalWebApi
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        public IScheduler ConfigurQuartz()
+        {
+            NameValueCollection qprops = new NameValueCollection()
+            {
+                { "quartz.serializer.type", "binary" },
+            };
+
+            StdSchedulerFactory schedulerFactory = new StdSchedulerFactory(qprops);
+            var scheduler = schedulerFactory.GetScheduler().Result;
+            scheduler.Start().Wait();
+            scheduler.ListenerManager.AddTriggerListener(new TaskTriggerListener());
+            return scheduler;
         }
     }
 }

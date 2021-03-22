@@ -200,7 +200,7 @@ namespace CalWebApi.Controllers
             .UsingJobData("data",JObject.FromObject(task).ToString())
             .WithIdentity(jobMetadata.TaskId.ToString())
             .WithDescription($"{jobMetadata.TaskName}")
-            .StoreDurably()
+            .StoreDurably(true)
             .Build();
         }
 

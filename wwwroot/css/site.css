@@ -105,3 +105,31 @@ body {
 .cron-items{
     text-align:center;
 }
+
+/*Index page task-box*/
+
+:root {
+    --task-min-w: 50%;
+    --task-min-h: 20vh;
+}
+
+.task-box-container{
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-wrap: wrap;
+    justify-content:flex-start;
+    align-content:space-around;
+    position:relative;
+}
+.task-box {
+    box-sizing:border-box;
+    background: #ccc;
+    min-height: var(--task-min-h);
+    min-width: var(--task-min-w);
+}
+
+.task-box-active{
+    width: calc(var(--task-min-w) + 40vw);
+    height: calc(var(--task-min-h) + 40vh);
+}

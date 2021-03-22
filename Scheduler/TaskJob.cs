@@ -23,11 +23,18 @@ namespace CalWebApi.Scheduler
         {
             ScheduleTask data = JsonConvert.DeserializeObject<ScheduleTask>(context.JobDetail.JobDataMap.GetString("data"));
 
-            WebRequest request = WebRequest.Create(data.CallBackUrl);
-            WebResponse response = request.GetResponse();
-            var responseCode = ((HttpWebResponse)response).StatusDescription;
-            response.Close();
-            Console.WriteLine($"Task Executed @ {DateTime.Now} with Response {responseCode}");
+            try
+            {
+                WebRequest request = WebRequest.Create(data.CallBackUrl);
+                WebResponse response = request.GetResponse();
+                var responseCode = ((HttpWebResponse)response).StatusDescription;
+                response.Close();
+                Console.WriteLine($"Task Executed @ {DateTime.Now} with Response {responseCode}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
             return Task.CompletedTask;
         }
     }
