@@ -127,6 +127,7 @@ body {
     background: #ccc;
     min-height: var(--task-min-h);
     min-width: var(--task-min-w);
+    touch-action:none;
 }
 
 .task-box-active{

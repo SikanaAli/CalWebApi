@@ -68,6 +68,10 @@
       "provider": "jsdelivr",
       "library": "cron-validator@1.2.1",
       "destination": "wwwroot/lib/cron-validator/"
+    },
+    {
+      "library": "interact.js@1.10.8",
+      "destination": "wwwroot/interact.js/lib/"
     }
   ]
 }

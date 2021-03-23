@@ -18,6 +18,7 @@ using System.Reflection;
 using System.IO;
 using Quartz;
 using System.Collections.Specialized;
+using Microsoft.Data.Sqlite;
 
 namespace CalWebApi
 {
@@ -49,10 +50,10 @@ namespace CalWebApi
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 S.IncludeXmlComments(xmlPath);
             });
-            var scheduler = StdSchedulerFactory.GetDefaultScheduler().GetAwaiter().GetResult();
+            
 
             services.AddSingleton(provider => _QuartzScheduler);
-            //services.AddHostedService<SchedulerHostedService>();
+            services.AddHostedService<SchedulerHostedService>();
         }
 
         private void OnShutdown()
@@ -105,12 +106,26 @@ namespace CalWebApi
         {
             NameValueCollection qprops = new NameValueCollection()
             {
-                { "quartz.serializer.type", "binary" },
+                //{ "quartz.threadPool.type","Quartz.Simpl.SimpleThreadPool, Quartz" },
+                //{ "quartz.threadPool.threadCount","Quartz.Simpl.SimpleThreadPool, Quartz" },
+                { "quartz.jobStore.type","Quartz.Impl.AdoJobStore.JobStoreTX, Quartz" },
+                { "quartz.jobStore.misfireThreshold","60000" },
+                { "quartz.jobStore.lockHandler.type","Quartz.Impl.AdoJobStore.UpdateLockRowSemaphore, Quartz" },
+                { "quartz.jobStore.useProperties","true" },
+                { "quartz.jobStore.tablePrefix","QRTZ_" },
+                { "quartz.scheduler.instanceId","Quartz" },
+                { "quartz.serializer.type", "json" },
+                { "quartz.jobStore.dataSource","default" },
+                { "quartz.dataSource.default.provider", "SQLite-Microsoft" },
+                { "quartz.jobStore.driverDelegateType","Quartz.Impl.AdoJobStore.SQLiteDelegate, Quartz" },
+                { "quartz.dataSource.default.connectionString", "Data Source=Quartz.db3" }
             };
+
+            
 
             StdSchedulerFactory schedulerFactory = new StdSchedulerFactory(qprops);
             var scheduler = schedulerFactory.GetScheduler().Result;
-            scheduler.Start().Wait();
+            
             scheduler.ListenerManager.AddTriggerListener(new TaskTriggerListener());
             return scheduler;
         }

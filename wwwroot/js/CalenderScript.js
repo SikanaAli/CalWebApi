@@ -81,7 +81,7 @@ var Validator = $("#ScheduleTaskForm").validate({
         var FormData = {
             "taskName": $("#cron-task-name").val().trim().toString(),
             "dateCreated": new Date().toISOString(),
-            "cronExpression": $("#cron-output").val().trim().toString(),
+            "cronExpression": "0/5 * * * * ?" /*$("#cron-output").val().trim().toString()*/,
             "callBackUrl": $("#cron-callback").val().trim().toString(),
             "discription": $("#cron-description").val().trim().toString()
         }

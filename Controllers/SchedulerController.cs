@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using CalWebApi.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +9,6 @@ using System.Net;
 
 using Quartz;
 using Microsoft.AspNetCore.Http;
-using Swashbuckle.Swagger.Annotations;
 using Swashbuckle.AspNetCore.Filters;
 using CalWebApi.Scheduler;
 using Microsoft.Extensions.Logging;
@@ -22,7 +20,7 @@ using CalWebApi.Helpers;
 
 namespace CalWebApi.Controllers
 {
-    
+
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [ApiVersion("1.0")]
@@ -161,27 +159,65 @@ namespace CalWebApi.Controllers
         [Route("Reschedule")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> RescheduleTask(string taskid)
+        public async Task<IActionResult> RescheduleTask([FromBody]TaskIdFromBody taskid)
         {
             Guid tempGuid;
-            if (Guid.TryParse(taskid, out tempGuid))
+            if (Guid.TryParse(taskid.TaskID, out tempGuid))
             {
                 //if (await CheckIfKeyExists(taskid))
                 //    return BadRequest("Invalid Task ID");
 
-                TriggerKey tkey = new TriggerKey(taskid);
-                JobKey jKey = new JobKey(taskid);
+                TriggerKey tkey = new TriggerKey(taskid.TaskID);
+                JobKey jKey = new JobKey(taskid.TaskID);
                 var jDetail = await scheduler.GetJobDetail(jKey);
                 ScheduleTask task = JsonConvert.DeserializeObject<ScheduleTask>(jDetail.JobDataMap.GetString("data"));
 
+                Console.WriteLine("Rescheduled Job Data");
+                Console.WriteLine(JObject.FromObject(task).ToString());
+
                 Type newTriggerTaskType = jDetail.JobType;
 
+                
+                var newTaskMetadata = new TaskMetadata(Guid.Parse(taskid.TaskID), newTriggerTaskType, task.TaskName, task.CronExpression);
 
-                var newTaskMetadata = new TaskMetadata(Guid.Parse(taskid), newTriggerTaskType, task.TaskName, task.CronExpression);
-                var isRescheduled = await scheduler.RescheduleJob(tkey, CreateTrigger(newTaskMetadata));
-                return Created(Request.Path, "Task Rescheduled");
+                //scheduler.ScheduleJob(CreateTriggerForJob(newTaskMetadata))
+
+                var isRescheduled = await scheduler.ScheduleJob(CreateTriggerForJob(newTaskMetadata,jDetail));
+
+                string resp = "Is Null";
+                if (isRescheduled == null)
+                {
+                    resp += " Trigger";
+                }
+                else
+                {
+                    resp = $"Trigger Created Dateoffset{isRescheduled}";
+                }
+                return Created(Request.Path, $"Task Rescheduled {resp}");
             }
             return BadRequest("Invalid Task Id");
+        }
+
+
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAllJobs()
+        {
+
+            IList<string> TaskGroups = (IList<String>)await scheduler.GetJobGroupNames();
+            List<JobKey> jobKeys = new List<JobKey>();
+
+            foreach (var group in TaskGroups)
+            {
+                var GM = GroupMatcher<JobKey>.GroupContains(group);
+                var TKs = await scheduler.GetJobKeys(GM);
+                foreach (var tk in TKs)
+                {
+                    jobKeys.Add(tk);
+                }
+            }
+            var done = await scheduler.DeleteJobs(jobKeys);
+            return Ok($"Was OK {done}");
         }
 
         //Task Creation Methods
@@ -193,6 +229,7 @@ namespace CalWebApi.Controllers
             .WithDescription($"{jobMetadata.TaskName}")
             .Build();
         }
+
         private IJobDetail CreateJob(TaskMetadata jobMetadata, ScheduleTask task)
         {
             return JobBuilder
@@ -201,6 +238,16 @@ namespace CalWebApi.Controllers
             .WithIdentity(jobMetadata.TaskId.ToString())
             .WithDescription($"{jobMetadata.TaskName}")
             .StoreDurably(true)
+            .Build();
+        }
+
+        private ITrigger CreateTriggerForJob(TaskMetadata jobMetadata, IJobDetail detailForJob)
+        {
+            return TriggerBuilder.Create()
+            .WithIdentity(jobMetadata.TaskId.ToString())
+            .WithCronSchedule(jobMetadata.CronExpression)
+            .WithDescription($"{jobMetadata.TaskName}")
+            .ForJob(detailForJob)
             .Build();
         }
 

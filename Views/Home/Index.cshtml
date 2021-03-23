@@ -13,21 +13,39 @@
         <div class="task-box">
             3
         </div>
-        <div class="task-box">
-            4
-        </div>
+       
     </div>
 </div>
 
 @section Scripts{
-    <script>
-        $('.task-box').
-        $(".task-box").click((item, e) => {
-            $(".task-box").each((index,item) => {
-                $(item).removeClass("task-box-active");
-            });
-             $(item.target).addClass('task-box-active');
-            console.log(item.target.outerText)
+    <script type="module">
+        //$('.task-box').
+        //$(".task-box").click((item, e) => {
+        //    $(".task-box").each((index,item) => {
+        //        $(item).removeClass("task-box-active");
+        //    });
+        //     $(item.target).addClass('task-box-active');
+        //    console.log(item.target.outerText)
+        //})
+        import interact from
+            'https://cdn.interactjs.io/v1.10.8/interactjs/index.js'
+
+        const position = { x: 0, y: 0 }
+
+        interact('.task-box').draggable({
+            listeners: {
+                start(event) {
+                    console.log(event.type, event.target)
+                },
+                move(event) {
+                    position.x += event.dx
+                    position.y += event.dy
+
+                    event.target.style.transform =
+                        `translate(${position.x}px, ${position.y}px)`
+                },
+            }
         })
     </script>
+
 }
