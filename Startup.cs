@@ -19,7 +19,10 @@ using System.IO;
 using Quartz;
 using System.Collections.Specialized;
 using Microsoft.Data.Sqlite;
-
+using CrystalQuartz.AspNetCore;
+using CrystalQuartz.Application;
+using Quartzmin;
+using Microsoft.Extensions.DependencyInjection;
 namespace CalWebApi
 {
     public class Startup
@@ -54,6 +57,7 @@ namespace CalWebApi
 
             services.AddSingleton(provider => _QuartzScheduler);
             services.AddHostedService<SchedulerHostedService>();
+            services.AddQuartzmin();
         }
 
         private void OnShutdown()
@@ -100,6 +104,11 @@ namespace CalWebApi
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+            app.UseQuartzmin(new QuartzminOptions()
+            {
+                Scheduler = _QuartzScheduler
+            }) ;
+
         }
 
         public IScheduler ConfigurQuartz()

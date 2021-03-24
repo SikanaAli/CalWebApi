@@ -117,7 +117,7 @@ namespace CalWebApi.Controllers
         /// <remarks>
         /// Sample request:
         ///
-        ///     PUT /Unschedule/{taskid}
+        ///     PUT /Unschedule
         ///     
         ///     {
         ///         taskid:task_id_goes_here
@@ -127,7 +127,7 @@ namespace CalWebApi.Controllers
         /// </remarks>
         /// <returns>Status code and messages where necessary</returns>
         /// <param name="taskid"></param>
-        /// <response code="201">Reruns 201 status and 'Task Schdeuled'</response>
+        /// <response code="200">Reruns 201 status and 'Task Schdeuled'</response>
         /// <response code="400">If the json is not stuctured well or invalid data</response>  
         [HttpPut]
         [ApiVersion("1.0")]
@@ -150,10 +150,23 @@ namespace CalWebApi.Controllers
 
 
         /// <summary>
-        /// Reschedule a task that is in an Unscheduled
+        /// Reschedule a task
         /// </summary>
-        /// <param name="taskid"></param>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     PUT /Reschedule
+        ///     
+        ///     {
+        ///         taskid:task_id_goes_here
+        ///     }
+        ///     
+        ///
+        /// </remarks>
         /// <returns>Status code and messages where necessary</returns>
+        /// <param name="taskid"></param>
+        /// <response code="200">Reruns 201 status and 'Task Schdeuled'</response>
+        /// <response code="400">If the json is not stuctured well or invalid data</response>  
         [HttpPut]
         [ApiVersion("1.0")]
         [Route("Reschedule")]
@@ -199,8 +212,13 @@ namespace CalWebApi.Controllers
         }
 
 
-
+        /// <summary>
+        /// Delete All Tasks
+        /// </summary>
+        /// <returns></returns>
         [HttpDelete]
+        [Route("DeleteAll")]
+        [ApiVersion("1.0")]
         public async Task<IActionResult> DeleteAllJobs()
         {
 
@@ -219,6 +237,9 @@ namespace CalWebApi.Controllers
             var done = await scheduler.DeleteJobs(jobKeys);
             return Ok($"Was OK {done}");
         }
+
+
+       // public Task<IActionResult> DeleteTask
 
         //Task Creation Methods
         private ITrigger CreateTrigger(TaskMetadata jobMetadata)
