@@ -8,37 +8,43 @@
     <link rel="stylesheet" href="~/lib/fontawesome/css/all.min.css" />
     <link rel="stylesheet" href="~/lib/izimodal/css/iziModal.min.css">
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/DataTables/datatables.css" />
+    <link rel="stylesheet" href="~/css/QuartzDashboard.css" />
     @RenderSection("Styles", required: false)
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CalWebApi</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Calendar">Calendar</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="/Doc">Api Docs</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+        <div class="vw-100 top-banner border-bottom mb-3">
+            <strong id="next-refresh-time" class="text-center align-self-center"></strong>
+        </div>
+        <nav class="floating-menu">
+            <ul class="main-menu">
+                <li>
+                    <a asp-controller="Home" asp-action="Index" class="ripple">
+                        <i class="fas fa-home fa-lg"></i>
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Home" asp-action="Calender" class="ripple">
+                        <i class="fas fa-calendar-day fa-lg"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Doc" class="ripple">
+                        <i class="fas fa-book-open fa-lg"></i>
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Home" asp-action="Settings" class="ripple">
+                        <i class="fas fa-cogs fa-lg"></i>
+                    </a>
+                </li>
+                
+            </ul>
+            <div class="menu-bg"></div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container-fluid">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -54,6 +60,8 @@
     <script src="~/lib/izimodal/js/iziModal.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/DataTables/datatables.js" asp-append-version="true"></script>
+    <script type="module" src="~/js/SchedularDashBoard.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

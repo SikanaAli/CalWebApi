@@ -22,11 +22,13 @@ using Microsoft.Data.Sqlite;
 using CrystalQuartz.AspNetCore;
 using CrystalQuartz.Application;
 using Quartzmin;
-using Microsoft.Extensions.DependencyInjection;
+
+
 namespace CalWebApi
 {
     public class Startup
     {
+        private string CalenderSchedulerCorsPolicy = "CalenderSchedulerCorsPolicy";
         private IScheduler _QuartzScheduler;
         public Startup(IConfiguration configuration)
         {
@@ -45,7 +47,17 @@ namespace CalWebApi
                 v.DefaultApiVersion = new ApiVersion(1, 0);
                 v.AssumeDefaultVersionWhenUnspecified = true;
                 v.ReportApiVersions = true;
+                
             });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: CalenderSchedulerCorsPolicy, builder =>
+                {
+                    builder.WithOrigins("https://192.168.10.88:5001");
+                });
+            });
+
             services.AddSwaggerGen(S =>
             {
                 S.SchemaFilter<ScheduleTaskModalFilter>();
@@ -57,14 +69,9 @@ namespace CalWebApi
 
             services.AddSingleton(provider => _QuartzScheduler);
             services.AddHostedService<SchedulerHostedService>();
-            services.AddQuartzmin();
         }
 
-        private void OnShutdown()
-        {
-            //shutdown quratz if its not already shutdown
-            if (!_QuartzScheduler.IsShutdown) _QuartzScheduler.Shutdown();
-        }
+        
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -104,10 +111,7 @@ namespace CalWebApi
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-            app.UseQuartzmin(new QuartzminOptions()
-            {
-                Scheduler = _QuartzScheduler
-            }) ;
+            
 
         }
 
