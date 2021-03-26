@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using CalWebApi.Filters;
 using System.Reflection;
 using System.IO;
+using System.Text.Json;
 using Quartz;
 using System.Collections.Specialized;
 using Microsoft.Data.Sqlite;
@@ -41,7 +42,9 @@ namespace CalWebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddControllersWithViews()
+                .AddRazorRuntimeCompilation()
+                .AddJsonOptions(opt=> opt.JsonSerializerOptions.PropertyNamingPolicy = null );
             services.AddApiVersioning(v =>
             {
                 v.DefaultApiVersion = new ApiVersion(1, 0);
@@ -68,6 +71,7 @@ namespace CalWebApi
             
 
             services.AddSingleton(provider => _QuartzScheduler);
+
             services.AddHostedService<SchedulerHostedService>();
         }
 

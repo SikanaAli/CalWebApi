@@ -16,7 +16,7 @@ using Quartz.Impl.Matchers;
 using CalWebApi.Helpers;
 
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
 
 namespace CalWebApi.Controllers
 {
@@ -38,10 +38,10 @@ namespace CalWebApi.Controllers
 
         // GET: api/<CalendarApiController>
         [HttpGet]
-        public async Task<List<ScheduledTasks>> Get()
+        public async Task<Array> Get()
         {
-            var tasks = await GetScheduledTasks();
-            return tasks;
+            
+            return await GetScheduledTasks();
         }
 
 
@@ -286,7 +286,7 @@ namespace CalWebApi.Controllers
 
 
         //GETS ALL JOBS
-        private async Task<List<ScheduledTasks>> GetScheduledTasks()
+        private async Task<Array> GetScheduledTasks()
         {
             IList<string> TaskGroups = (IList<String>)await scheduler.GetJobGroupNames();
             List<ScheduledTasks> _scheduledTasks = new List<ScheduledTasks>();
@@ -302,17 +302,16 @@ namespace CalWebApi.Controllers
                     {
                         _scheduledTasks.Add(new ScheduledTasks
                         {
+                            DT_RowId = trigger.Key.Name,
                             Group = group,
-                            TaskKey = Taskkey.Name,
                             TaskName = detail.Description,
-                            TriggerKey = trigger.Key.Name,
                             NextFireTime = trigger.GetNextFireTimeUtc(),
                             PreviousFireTime = trigger.GetPreviousFireTimeUtc()
                         });
                     }
                 }
             }
-            return _scheduledTasks;
+            return _scheduledTasks.ToArray();
         }
 
     }
