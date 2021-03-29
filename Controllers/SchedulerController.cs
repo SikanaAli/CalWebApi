@@ -238,8 +238,29 @@ namespace CalWebApi.Controllers
             return Ok($"Was OK {done}");
         }
 
+        /// <summary>
+        /// Delete a Single Task
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Route("Delete")]
+        [ApiVersion("1.0")]
+        public async Task<IActionResult> DeleteTask([FromBody]TaskIdFromBody taskId)
+        {
+            try
+            {
+                var jKey = new JobKey(taskId.TaskID);
+                if (await scheduler.CheckExists(jKey)) await scheduler.DeleteJob(jKey);
 
-       // public Task<IActionResult> DeleteTask
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return Ok();
+        }
 
         //Task Creation Methods
         private ITrigger CreateTrigger(TaskMetadata jobMetadata)

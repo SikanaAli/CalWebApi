@@ -72,6 +72,10 @@
     {
       "library": "interact.js@1.10.8",
       "destination": "wwwroot/interact.js/lib/"
+    },
+    {
+      "library": "bootstrap-sweetalert@1.0.1",
+      "destination": "wwwroot/lib/bootstrap-sweetalert/"
     }
   ]
 }

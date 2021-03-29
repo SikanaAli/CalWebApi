@@ -1,13 +1,4 @@
 ﻿
-
-//Doc Ready
-$(() => {
-    $("#cron-expression-desc").text(cronstrue.toString($("#cron-output").val()));    
-})
-
-
-
-
 function selectDate(date) {
     $('#calendar').updateCalendarOptions({
         date: date
@@ -20,6 +11,7 @@ function onDoubleClick(date) {
         date: date
     });
     $('#calendar-modal').iziModal('open');
+    $("#cron-expression-desc").text(cronstrue.toString($("#cron-output").val()))
     console.log("Doublick done");
 }
 
@@ -37,18 +29,17 @@ $('.day').addClass('noselect');
 
 //Calender Modal
 $("#calendar-modal").iziModal({
-    title:"<strong>Schedule New Task</strong>",
+    title: "<strong>Schedule New Task</strong>",
     padding: "2rem",
     radius: 5,
-    width:"60%",
+    width: "60%",
     fullscreen: true,
     theme: "light",
-    appendToOverlay: 'body',
-    
+
     left: 0,
     right: 0,
-    
-});
+
+})
 
 
 //Form Validattion

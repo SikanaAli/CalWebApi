@@ -1,58 +1,190 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    @using System.Globalization;
+}
+@functions {
+
+    public int AddBy(int Value, int By)
+    {
+        return Value + By;
+    }
+
 }
 
 
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/lib/calender.js/CalendarJsStyle.css" />
+    <link rel="stylesheet" type="text/css" href="~/lib/calender.js/CalendarJsTheme.css" />
+
+}
 
 
-
-<div class="container">
-    <div class="task-box shadow p-2">
-        <table id="task-dataTable" class="display table-hover table table-condensed table-sm">
-            <thead>
-                <tr>
-                    <th>Task Name</th>
-                    <th>Group</th>
-                    <th>Previous Fire Time</th>
-                    <th>Next Fire Time</th>
-                </tr>
-            </thead>
-        </table>
-        <embed type="text/html" src="http://192.168.10.88:5000" style="width:100%; height:40vh" />
+<ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="calendar-tab" data-toggle="tab" href="#calendar" role="tab" aria-controls="calendar" aria-selected="false">Calendar</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="docs-tab" data-toggle="tab" href="#docs" role="tab" aria-controls="contact" aria-selected="false">Docs</a>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <div class="task-box shadow p-2">
+            <table id="task-dataTable" class="display table-hover table table-condensed table-sm">
+                <thead>
+                    <tr>
+                        <th>Task Name</th>
+                        <th>Group</th>
+                        <th>Previous Fire Time</th>
+                        <th>Next Fire Time</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
+    <div class="tab-pane fade" id="calendar" role="tabpanel" aria-labelledby="calendar-tab">
+        <div id="calendar" class="noselect">
+        </div>
+
+    </div>
+    <div class="tab-pane fade h-100" id="docs" role="tabpanel" aria-labelledby="Docs-tab">
+        <object id="docs-item" data="/Doc" style="width:100%; height:82vh" class="shadow">
+        </object>
+    </div>
+
+</div>
+
+<!--
+   Calendar Modal
+-->
+<div id="calendar-modal">
+    <form id="ScheduleTaskForm">
+        <div class="form-group">
+            <label for="cron-task-name">Task Name</label>
+            <input type="text" class="form-control" id="cron-task-name" name="cron-task-name" aria-describedby="Task Name" placeholder="Task Name">
+        </div>
+        <div class="form-group">
+            <hr />
+            <label class="align-self-center text-center" for="cron-output">Task Schedule</label>
+            <div class="form-row cron-container">
+                <div class="cron-items">
+                    <h6>Minutes</h6>
+                    <select multiple="multiple" size="7" class="form-control" id="cron-minutes" name="cron-minutes" onchange="updateField('minutes')">
+                        @for (int i = 0; i < 60; i++)
+                        {
+                            <option selected="selected" value="@i">
+                                @{if (i < 10)
+                                    { <p>0</p>@i }
+                                else
+                                {@i}}
+                            </option>
+                        }
+                    </select>
+                    <div class="mt-1">
+                        <a class="btn-sm  btn-primary" href="javascript:cronHelperSelectAll('#cron-minutes')">select all</a>
+                    </div>
+                </div>
+                <div class="cron-items">
+                    <h6>Hours</h6>
+                    <select multiple="multiple" size="7" class="form-control form-" id="cron-hours" name="cron-hours" onchange="updateField('hours')">
+                        @for (int i = 0; i < 24; i++)
+                        {
+                            <option selected="selected" value="@i">
+                                @{if (i < 10)
+                                    { <p>0</p>@i }
+                                else
+                                {@i}}
+                            </option>
+                        }
+                    </select>
+                    <div class="mt-1">
+                        <a class="btn-sm  btn-primary" href="javascript:cronHelperSelectAll('#cron-hours')">select all</a>
+                    </div>
+                </div>
+                <div class="cron-items">
+                    <h6>Days in Month</h6>
+                    <select multiple="multiple" size="7" class="form-control" id="cron-dim" name="cron-dim" onchange="updateField('dim')">
+                        @for (int i = 0; i <= 31; i++)
+                        {
+                            <option selected="selected" value="@AddBy(i,1)">
+                                @{if (i < 10)
+                                    { <p>0</p>@i }
+                                else
+                                {@i}}
+                            </option>
+                        }
+                    </select>
+                    <div class="mt-1">
+                        <a class="btn-sm  btn-primary" href="javascript:cronHelperSelectAll('#cron-dim')">select all</a>
+                    </div>
+                </div>
+                <div class="cron-items">
+                    <h6>Months</h6>
+                    <select multiple="multiple" size="7" class="form-control" id="cron-months" name="cron-months" onchange="updateField('months')">
+                        @{
+                            int count = 1;
+                            for (int i = 0; i < 12; i++)
+                            {
+                                <option selected="selected" value="@count ">@DateTimeFormatInfo.CurrentInfo.MonthNames[i]</option>
+                                count++;
+                            }
+                        }
+                    </select>
+                    <div class="mt-1">
+                        <a class="btn-sm  btn-primary" href="javascript:cronHelperSelectAll('#cron-months')">select all</a>
+                    </div>
+                </div>
+                <div class="cron-items">
+                    <h6>Days in Week</h6>
+                    <select multiple="multiple" size="7" class="form-control" id="cron-days" name="cron-days" onchange="updateField('diw')">
+                        @{
+                            for (int i = 0; i <= 6; i++)
+                            {
+                                <option selected="selected" value="@i">@DateTimeFormatInfo.CurrentInfo.DayNames[i]</option>
+                            }
+                        }
+                    </select>
+                    <div class="mt-1">
+                        <a class="btn-sm  btn-primary" href="javascript:cronHelperSelectAll('#cron-days')">select all</a>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="mt-4">
+                <input class="form-control" type="text" id="cron-output" name="cron-output" value="* * * * *" onkeyup="importCronExpressionFromInput('#cron-output')">
+                <small id="cron-expression-desc"></small>
+            </div>
+            <hr />
+        </div>
+        <div>
+            <label for="cllback-url">Callback URL</label>
+            <input type="url" class="form-control" id="cron-callback" name="cron-callback">
+            <label class="" for="cron-discription">Task Description</label>
+            <textarea type="text" class="form-control" id="cron-description" rows="4" name="cron-discription"></textarea>
+        </div>
+        <div class="w-100 d-flex justify-content-center pt-3">
+            <button type="submit" class="btn btn-primary align-self-center" id="SubmitTask">Submit <i class="far fa-paper-plane"></i></button>
+        </div>
+    </form>
 </div>
 
 
 
 @section Scripts{
-    <script type="module">
-        //$('.task-box').
-        //$(".task-box").click((item, e) => {
-        //    $(".task-box").each((index,item) => {
-        //        $(item).removeClass("task-box-active");
-        //    });
-        //     $(item.target).addClass('task-box-active');
-        //    console.log(item.target.outerText)
-        //})
-        import interact from
-            'https://cdn.interactjs.io/v1.10.8/interactjs/index.js'
-
-        const position = { x: 0, y: 0 }
-
-        //interact('.task-box').draggable({
-        //    listeners: {
-        //        start(event) {
-        //            console.log(event.type, event.target)
-        //        },
-        //        move(event) {
-        //            position.x += event.dx
-        //            position.y += event.dy
-
-        //            event.target.style.transform =
-        //                `translate(${position.x}px, ${position.y}px)`
-        //        },
-        //    }
-        //})
+    
+    <script type="text/javascript" src="~/lib/bootstrap-sweetalert/sweetalert.min.js"></script>
+    <script src="~/lib/cronstrue/dist/cronstrue.min.js" async></script>
+    
+    <script>
+        var cronstrue = window.cronstrue;
+        var cron = window.cron;
     </script>
-
+    <script src="~/lib/fontawesome/js/all.min.js" type="text/javascript"></script>
+    <script src="~/lib/calender.js/Calendar.js" type="text/javascript"></script>
+    <script src="~/js/CalenderScript.js" type="text/javascript"></script>
+    <script src="~/js/CronExpressionGenrator.js" type="text/javascript"></script>
 }
