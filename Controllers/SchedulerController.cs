@@ -13,7 +13,6 @@ using Swashbuckle.AspNetCore.Filters;
 using CalWebApi.Scheduler;
 using Microsoft.Extensions.Logging;
 using Quartz.Impl.Matchers;
-using CalWebApi.Helpers;
 
 
 
@@ -246,7 +245,7 @@ namespace CalWebApi.Controllers
         [HttpDelete]
         [Route("Delete")]
         [ApiVersion("1.0")]
-        public async Task<IActionResult> DeleteTask([FromBody]TaskIdFromBody taskId)
+        public async Task<IActionResult> Delete([FromBody]TaskIdFromBody taskId)
         {
             try
             {
@@ -258,6 +257,29 @@ namespace CalWebApi.Controllers
             {
 
                 throw;
+            }
+            return Ok();
+        }
+
+        /// <summary>
+        /// Deletes Multiple Tasks
+        /// </summary>
+        /// <param name="idsFromBody"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Route("DeleteTasks")]
+        public async Task<IActionResult> DeleteTasks([FromBody]DeleteTaskIdsFromBody idsFromBody)
+        {
+
+            var canProceed = await CheckIfKeyExists(idsFromBody.TaskIds);
+
+            if (canProceed)
+            {
+                List<JobKey> jKeys = new List<JobKey>();
+                idsFromBody.TaskIds.ForEach( (id) =>
+                {
+                    jKeys.Add(new JobKey(Guid.Parse(id).ToString()));
+                });
             }
             return Ok();
         }
@@ -305,6 +327,23 @@ namespace CalWebApi.Controllers
             return false;
         }
 
+        private async Task<bool> CheckIfKeyExists(List<string> taskids)
+        {
+            bool good = false;
+            
+            foreach( var id in taskids)
+            {
+                Guid tempGuid;
+                if (Guid.TryParse(id, out tempGuid))
+                {
+                    var jKey = new JobKey(tempGuid.ToString());
+                    good = await scheduler.CheckExists(jKey);
+                    if (good == false) break;
+                }
+            }
+            
+            return good;
+        }
 
         //GETS ALL JOBS
         private async Task<Array> GetScheduledTasks()

@@ -25,16 +25,76 @@ let taskTable = $("#task-dataTable").DataTable({
             action: function (e, dt, node, config) {
 
                 let rowCount = dt.rows({ selected: true }).data().length;
-                var tempRows = dt.rows({ selected: true }).data()
-                console.log(rowCount)
-                var rows = {}
-                //for (var i = 0; i < rowCount - 1; i++) {
-                //    temp = tempRows[i].DT_RowId
-                //    rows = { ...rows, temp}
-                //}
+                if (rowCount > 0) {
+                    let msgText = 'Are you sure you want to Delete the Task';
 
-                console.log(tempRows[0].DT_RowId)
-                //swal("Here's a message!", "It's pretty, isn't it?")
+                    if (rowCount > 1) msgText = msgText + 's';
+                    var rows = []
+                    for (var i = 0; i <= rowCount - 1; i++) {
+                        rows.push(dt.rows({ selected: true }).data()[i].DT_RowId)
+                    }
+                    
+                    swal({
+                        text: msgText,
+                        icon: 'warning',
+                        dangerMode:true,
+                        buttons: {
+                            cancel: "Cancel",
+                            confirm: {
+                                text: "Yes, Delete",
+                                value: "confirm",
+                                className:"myClass"
+                            }
+                        }
+                    }).then(btnVal => {
+                        switch (btnVal) {
+                            case "confirm":
+                                let deleteUrl = "/api/v1/Scheduler/Delete"
+                                if (rowCount > 1)
+                                    deleteUrl = "/api/v1/Scheduler/DeleteTasks"
+                                let deleteData = {
+                                    TaskIds: rows,
+                                    count:rowCount
+                                }
+
+                                console.log(JSON.stringify(deleteData))
+                                $.ajax({
+                                    url: deleteUrl,
+                                    contentType: "application/json",
+                                    method: "DELETE",
+                                    data: JSON.stringify(deleteData)
+                                    
+                                })
+
+                                swal("Delete", "Tasks Deleted", "success")
+                                break;
+                            case null:
+                                swal.stopLoading();
+                                swal.close();
+                                break;
+                            default:
+                                swal("Delete", "No Action", "info")
+                               
+                        }
+                    }).catch(err => {
+                        if (err) {
+                            swal("Oh noes!", "The AJAX request failed!", "error");
+                        } else {
+                            swal.stopLoading();
+                            swal.close();
+                        }
+                    });
+
+                } else {
+                    swal("Opps", "It appears nothin was selected from the table below","info")
+                }
+
+
+                
+                console.log(rowCount)
+                
+
+               
             }
         }
     ],
