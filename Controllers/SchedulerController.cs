@@ -35,11 +35,10 @@ namespace CalWebApi.Controllers
             logger = _logger;
         }
 
-        // GET: api/<CalendarApiController>
+        // GET: api/v1/Scheduler
         [HttpGet]
         public async Task<Array> Get()
         {
-            
             return await GetScheduledTasks();
         }
 
@@ -237,29 +236,7 @@ namespace CalWebApi.Controllers
             return Ok($"Was OK {done}");
         }
 
-        /// <summary>
-        /// Delete a Single Task
-        /// </summary>
-        /// <param name="taskId"></param>
-        /// <returns></returns>
-        [HttpDelete]
-        [Route("Delete")]
-        [ApiVersion("1.0")]
-        public async Task<IActionResult> Delete([FromBody]TaskIdFromBody taskId)
-        {
-            try
-            {
-                var jKey = new JobKey(taskId.TaskID);
-                if (await scheduler.CheckExists(jKey)) await scheduler.DeleteJob(jKey);
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            return Ok();
-        }
+        
 
         /// <summary>
         /// Deletes Multiple Tasks
@@ -271,17 +248,29 @@ namespace CalWebApi.Controllers
         public async Task<IActionResult> DeleteTasks([FromBody]DeleteTaskIdsFromBody idsFromBody)
         {
 
-            var canProceed = await CheckIfKeyExists(idsFromBody.TaskIds);
-
-            if (canProceed)
+            try
             {
-                List<JobKey> jKeys = new List<JobKey>();
-                idsFromBody.TaskIds.ForEach( (id) =>
+                var canProceed = await CheckIfKeyExists(idsFromBody.TaskIds);
+
+                if (canProceed)
                 {
-                    jKeys.Add(new JobKey(Guid.Parse(id).ToString()));
-                });
+                    List<JobKey> jKeys = new List<JobKey>();
+                    idsFromBody.TaskIds.ForEach((id) =>
+                    {
+                        jKeys.Add(new JobKey(Guid.Parse(id).ToString()));
+                    });
+
+                    var result = await scheduler.DeleteJobs(jKeys);
+                    if(result)
+                        return Ok( "{'response':'Task(s) suceefuly deleted'}");
+                    
+                }
+                return BadRequest("{'response':'an error has occured'}");
             }
-            return Ok();
+            catch (Exception)
+            {
+                return BadRequest("An Error ocured whith on of the values");
+            };
         }
 
         //Task Creation Methods

@@ -6,7 +6,7 @@ let nextRefreshEle = $("#next-refresh-time");
 
 let taskTable = $("#task-dataTable").DataTable({
     dom: "<'row'<'col-sm-12 col-md-6'Bl><'col-sm-12 col-md-6'f>>" +
-        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-12't>>" +
         "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
     buttons: [
         {
@@ -49,9 +49,8 @@ let taskTable = $("#task-dataTable").DataTable({
                     }).then(btnVal => {
                         switch (btnVal) {
                             case "confirm":
-                                let deleteUrl = "/api/v1/Scheduler/Delete"
-                                if (rowCount > 1)
-                                    deleteUrl = "/api/v1/Scheduler/DeleteTasks"
+                                let deleteUrl = "/api/v1/Scheduler/DeleteTaskss"
+                                
                                 let deleteData = {
                                     TaskIds: rows,
                                     count:rowCount
@@ -62,11 +61,17 @@ let taskTable = $("#task-dataTable").DataTable({
                                     url: deleteUrl,
                                     contentType: "application/json",
                                     method: "DELETE",
-                                    data: JSON.stringify(deleteData)
+                                    data: JSON.stringify(deleteData),
+                                    success: function (result) {
+                                        swal("Delete", result.response, "success")
+                                    },
+                                    error: function (result) {
+                                        swal("Delete", result.response, "error")
+                                    }
                                     
                                 })
 
-                                swal("Delete", "Tasks Deleted", "success")
+                                
                                 break;
                             case null:
                                 swal.stopLoading();
