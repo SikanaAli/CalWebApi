@@ -40,6 +40,7 @@
                         <th>Group</th>
                         <th>Previous Fire Time</th>
                         <th>Next Fire Time</th>
+                        <th>Discription</th>
                     </tr>
                 </thead>
             </table>
@@ -70,6 +71,23 @@
             <hr />
             <label class="align-self-center text-center" for="cron-output">Task Schedule</label>
             <div class="form-row cron-container">
+                <div class="cron-items">
+                    <h6>seconds</h6>
+                    <select multiple="multiple" size="7" class="form-control" id="cron-seconds" onchange="updateField('seconds')">
+                        @for (int i = 0; i < 60; i++)
+                        {
+                            <option selected="selected" value="@i">
+                                @{if (i < 10)
+                                    { <p>0</p>@i }
+                                else
+                                {@i}}
+                            </option>
+                        }
+                    </select>
+                    <div class="mt-1">
+                        <a class="btn-sm  btn-primary" href="javascript:cronHelperSelectAll('#cron-seconds')">select all</a>
+                    </div>
+                </div>
                 <div class="cron-items">
                     <h6>Minutes</h6>
                     <select multiple="multiple" size="7" class="form-control" id="cron-minutes" name="cron-minutes" onchange="updateField('minutes')">

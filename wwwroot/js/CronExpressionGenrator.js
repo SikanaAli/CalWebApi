@@ -4,6 +4,7 @@ var cron_dom = "*";
 var cron_months = "*";
 var cron_dow = "*";
 
+var cron_seconds_id = "#cron-seconds"
 var cron_minutes_id = "#cron-minutes";
 var cron_hours_id = "#cron-hours";
 var cron_dom_id = "#cron-dim";

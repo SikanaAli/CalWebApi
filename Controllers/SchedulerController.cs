@@ -247,11 +247,11 @@ namespace CalWebApi.Controllers
         [Route("DeleteTasks")]
         public async Task<IActionResult> DeleteTasks([FromBody]DeleteTaskIdsFromBody idsFromBody)
         {
-
+            JObject responseObj = new JObject();
             try
             {
                 var canProceed = await CheckIfKeyExists(idsFromBody.TaskIds);
-
+                
                 if (canProceed)
                 {
                     List<JobKey> jKeys = new List<JobKey>();
@@ -261,15 +261,20 @@ namespace CalWebApi.Controllers
                     });
 
                     var result = await scheduler.DeleteJobs(jKeys);
-                    if(result)
-                        return Ok( "{'response':'Task(s) suceefuly deleted'}");
+                    if (result)
+                    {
+                        responseObj.Add("response", "Task(s) suceefuly deleted");
+                        return Ok( responseObj.ToString());
+                    }
                     
                 }
-                return BadRequest("{'response':'an error has occured'}");
+                responseObj.Add("response", "an error has occured");
+                return BadRequest(responseObj.ToString());
             }
             catch (Exception)
             {
-                return BadRequest("An Error ocured whith on of the values");
+                responseObj.Add("response", "An Error ocured whith on of the values");
+                return BadRequest(responseObj.ToString());
             };
         }
 
@@ -289,17 +294,19 @@ namespace CalWebApi.Controllers
             .Create(jobMetadata.TaskType)
             .UsingJobData("data",JObject.FromObject(task).ToString())
             .WithIdentity(jobMetadata.TaskId.ToString())
-            .WithDescription($"{jobMetadata.TaskName}")
+            .WithDescription(task.Discription)
             .StoreDurably(true)
             .Build();
         }
+
+        
 
         private ITrigger CreateTriggerForJob(TaskMetadata jobMetadata, IJobDetail detailForJob)
         {
             return TriggerBuilder.Create()
             .WithIdentity(jobMetadata.TaskId.ToString())
             .WithCronSchedule(jobMetadata.CronExpression)
-            .WithDescription($"{jobMetadata.TaskName}")
+            .WithDescription(jobMetadata.TaskName)
             .ForJob(detailForJob)
             .Build();
         }
@@ -345,7 +352,7 @@ namespace CalWebApi.Controllers
                 var TaskKeys = await scheduler.GetJobKeys(groupMatcher);
                 foreach (var Taskkey in TaskKeys)
                 {
-                    var detail = await scheduler.GetJobDetail(Taskkey);
+                    var jdetail = await scheduler.GetJobDetail(Taskkey);
                     var triggers = await scheduler.GetTriggersOfJob(Taskkey);
                     foreach (var trigger in triggers)
                     {
@@ -353,7 +360,8 @@ namespace CalWebApi.Controllers
                         {
                             DT_RowId = trigger.Key.Name,
                             Group = group,
-                            TaskName = detail.Description,
+                            TaskName = trigger.Description,
+                            Discription = jdetail.Description,
                             NextFireTime = trigger.GetNextFireTimeUtc(),
                             PreviousFireTime = trigger.GetPreviousFireTimeUtc()
                         });

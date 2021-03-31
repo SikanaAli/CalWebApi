@@ -10,6 +10,7 @@ namespace CalWebApi.Models
         public string DT_RowId { get; set; }
         public string TaskName { get; set; }
         public string Group { get; set; }
+        public string Discription { get; set;}
         public DateTimeOffset? PreviousFireTime { get; set; }
         public DateTimeOffset? NextFireTime { get; set; }
 

@@ -49,7 +49,7 @@ let taskTable = $("#task-dataTable").DataTable({
                     }).then(btnVal => {
                         switch (btnVal) {
                             case "confirm":
-                                let deleteUrl = "/api/v1/Scheduler/DeleteTaskss"
+                                let deleteUrl = "/api/v1/Scheduler/DeleteTasks"
                                 
                                 let deleteData = {
                                     TaskIds: rows,
@@ -63,12 +63,16 @@ let taskTable = $("#task-dataTable").DataTable({
                                     method: "DELETE",
                                     data: JSON.stringify(deleteData),
                                     success: function (result) {
-                                        swal("Delete", result.response, "success")
+                                        let temp = JSON.parse(result)
+                                        swal("Delete", temp.response, "success")
                                     },
-                                    error: function (result) {
-                                        swal("Delete", result.response, "error")
-                                    }
+                                    error: function (jqXHR, exception) {
+                                        swal("Delete", jqXHR.statusText , "error")
+                                    },
                                     
+                                    
+                                }).fail((jqXHR, expetion) => {
+                                    swal("Delete", "somthing went wrong", "error")
                                 })
 
                                 
@@ -113,6 +117,7 @@ let taskTable = $("#task-dataTable").DataTable({
         { "data": "Group" },
         { "data": "PreviousFireTime" },
         { "data": "NextFireTime" },
+        { "data": "Discription" }
     ],
 });
 
