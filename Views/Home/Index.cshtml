@@ -67,123 +67,164 @@
             <label for="cron-task-name">Task Name</label>
             <input type="text" class="form-control" id="cron-task-name" name="cron-task-name" aria-describedby="Task Name" placeholder="Task Name">
         </div>
-        <div class="form-group">
-            <hr />
-            <label class="align-self-center text-center" for="cron-output">Task Schedule</label>
-            <div class="form-row cron-container">
-                <div class="cron-items">
-                    <h6>seconds</h6>
-                    <select multiple="multiple" size="7" class="form-control" id="cron-seconds" onchange="updateField('seconds')">
-                        @for (int i = 0; i < 60; i++)
-                        {
-                            <option selected="selected" value="@i">
-                                @{if (i < 10)
-                                    { <p>0</p>@i }
-                                else
-                                {@i}}
-                            </option>
-                        }
-                    </select>
-                    <div class="mt-1">
-                        <a class="btn-sm  btn-primary" href="javascript:cronHelperSelectAll('#cron-seconds')">select all</a>
-                    </div>
-                </div>
-                <div class="cron-items">
-                    <h6>Minutes</h6>
-                    <select multiple="multiple" size="7" class="form-control" id="cron-minutes" name="cron-minutes" onchange="updateField('minutes')">
-                        @for (int i = 0; i < 60; i++)
-                        {
-                            <option selected="selected" value="@i">
-                                @{if (i < 10)
-                                    { <p>0</p>@i }
-                                else
-                                {@i}}
-                            </option>
-                        }
-                    </select>
-                    <div class="mt-1">
-                        <a class="btn-sm  btn-primary" href="javascript:cronHelperSelectAll('#cron-minutes')">select all</a>
-                    </div>
-                </div>
-                <div class="cron-items">
-                    <h6>Hours</h6>
-                    <select multiple="multiple" size="7" class="form-control form-" id="cron-hours" name="cron-hours" onchange="updateField('hours')">
-                        @for (int i = 0; i < 24; i++)
-                        {
-                            <option selected="selected" value="@i">
-                                @{if (i < 10)
-                                    { <p>0</p>@i }
-                                else
-                                {@i}}
-                            </option>
-                        }
-                    </select>
-                    <div class="mt-1">
-                        <a class="btn-sm  btn-primary" href="javascript:cronHelperSelectAll('#cron-hours')">select all</a>
-                    </div>
-                </div>
-                <div class="cron-items">
-                    <h6>Days in Month</h6>
-                    <select multiple="multiple" size="7" class="form-control" id="cron-dim" name="cron-dim" onchange="updateField('dim')">
-                        @for (int i = 0; i <= 31; i++)
-                        {
-                            <option selected="selected" value="@AddBy(i,1)">
-                                @{if (i < 10)
-                                    { <p>0</p>@i }
-                                else
-                                {@i}}
-                            </option>
-                        }
-                    </select>
-                    <div class="mt-1">
-                        <a class="btn-sm  btn-primary" href="javascript:cronHelperSelectAll('#cron-dim')">select all</a>
-                    </div>
-                </div>
-                <div class="cron-items">
-                    <h6>Months</h6>
-                    <select multiple="multiple" size="7" class="form-control" id="cron-months" name="cron-months" onchange="updateField('months')">
-                        @{
-                            int count = 1;
-                            for (int i = 0; i < 12; i++)
-                            {
-                                <option selected="selected" value="@count ">@DateTimeFormatInfo.CurrentInfo.MonthNames[i]</option>
-                                count++;
-                            }
-                        }
-                    </select>
-                    <div class="mt-1">
-                        <a class="btn-sm  btn-primary" href="javascript:cronHelperSelectAll('#cron-months')">select all</a>
-                    </div>
-                </div>
-                <div class="cron-items">
-                    <h6>Days in Week</h6>
-                    <select multiple="multiple" size="7" class="form-control" id="cron-days" name="cron-days" onchange="updateField('diw')">
-                        @{
-                            for (int i = 0; i <= 6; i++)
-                            {
-                                <option selected="selected" value="@i">@DateTimeFormatInfo.CurrentInfo.DayNames[i]</option>
-                            }
-                        }
-                    </select>
-                    <div class="mt-1">
-                        <a class="btn-sm  btn-primary" href="javascript:cronHelperSelectAll('#cron-days')">select all</a>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="mt-4">
-                <input class="form-control" type="text" id="cron-output" name="cron-output" value="* * * * *" onkeyup="importCronExpressionFromInput('#cron-output')">
-                <small id="cron-expression-desc"></small>
-            </div>
-            <hr />
-        </div>
+        <hr />
         <div>
-            <label for="cllback-url">Callback URL</label>
-            <input type="url" class="form-control" id="cron-callback" name="cron-callback">
-            <label class="" for="cron-discription">Task Description</label>
-            <textarea type="text" class="form-control" id="cron-description" rows="4" name="cron-discription"></textarea>
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="minutes-tab" data-toggle="tab" href="#task-minutes" role="tab" aria-controls="minutes" aria-selected="false">Minuets</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="hourly-tab" data-toggle="tab" href="#hourly" role="tab" aria-controls="hourly" aria-selected="false">Hourly</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="daily-tab" data-toggle="tab" href="#daily" role="tab" aria-controls="daily" aria-selected="false">Daily</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <!--Tab 1-->
+                <div class="tab-pane fade show active" id="task-minutes" role="tabpanel" aria-labelledby="minutes-tab">
+                    <div class="row p-3">
+                        <div class="col-3 form-inline">
+                            <label>Every</label>
+                            <select class="form-control form-control-sm ml-2" id="cron-minutes" name="cronMinutes">
+                                @{
+                                    for (int i = 1; i < 60; i++)
+                                    {
+                                        <option value="@i">@i</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Tab 2-->
+                <div class="tab-pane fade" id="hourly" role="tabpanel" aria-labelledby="hourly-tab">
+                    <div class=" p-3">
+                        <div class="form-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                            <label class="form-check-label">
+
+                                Every
+                                <select class="form-control form-control-sm ml-2" id="cron-hourly" name="cronHourly">
+                                    @{
+
+                                        for (int i = 1; i < 25; i++)
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    }
+                                </select>
+                            </label>
+                        </div>
+
+                        <div class="form-inline mt-3">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                                <label class="form-check-label" for="inlineRadio1">Start at</label>
+                                <div class="form-inline ">
+                                    <select class="form-control form-control-sm ml-2 mr-1" id="cron-hour-start" name="cronHourStart">
+                                        @{
+                                            string tempval = "";
+                                            for (int i = 0; i < 24; i++)
+                                            {
+                                                if (i < 10)
+                                                {
+                                                    tempval = string.Concat("0", i);
+                                                }
+                                                else
+                                                {
+                                                    tempval = i.ToString();
+                                                }
+                                                <option value="@tempval ">@tempval</option>
+                                            }
+                                        }
+                                    </select>
+                                    :
+                                    <select class="form-control form-control-sm ml-1">
+                                        @{
+                                            string tempval2 = "";
+                                            for (int i = 0; i < 60; i++)
+                                            {
+                                                if (i < 10)
+                                                {
+                                                    tempval2 = string.Concat("0", i);
+                                                }
+                                                else
+                                                {
+                                                    tempval2 = i.ToString();
+                                                }
+                                                <option value="@tempval2 ">@tempval2</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <!--Tab 3-->
+                <div class="tab-pane fade" id="daily" role="tabpanel" aria-labelledby="daily-tab">
+                    <div class="">
+                        <div class="form-check-inline">
+                            <input class="form-check-input" type="radio" name="dailyLable" id="daily-lable-one">
+                            <label class="form-check-label" for="daily-lable-one">Everyday</label>
+                        </div>
+                        <div class="form-check-inline mt-3">
+                            <input class="form-check-input" type="radio" name="dailyLable" id="daily-lable-one">
+                            <label class="form-check-label" for="daily-lable-one">Every Weakday</label>
+                        </div>
+                        <div class="form-inline">
+                            <label class="form-check-label">Start At</label>
+                            <div class="form-inline ">
+                                <select class="form-control form-control-sm ml-2 mr-1" id="cron-hour-start" name="cronHourStart">
+                                    @{
+                                        string tempvaldaily = "";
+                                        for (int i = 0; i < 24; i++)
+                                        {
+                                            if (i < 10)
+                                            {
+                                                tempvaldaily = string.Concat("0", i);
+                                            }
+                                            else
+                                            {
+                                                tempvaldaily = i.ToString();
+                                            }
+                                            <option value="@tempvaldaily ">@tempvaldaily</option>
+                                        }
+                                    }
+                                </select>
+                                :
+                                <select class="form-control form-control-sm ml-1">
+                                    @{
+                                        string tempvaldaily2 = "";
+                                        for (int i = 0; i < 60; i++)
+                                        {
+                                            if (i < 10)
+                                            {
+                                                tempvaldaily2 = string.Concat("0", i);
+                                            }
+                                            else
+                                            {
+                                                tempvaldaily2 = i.ToString();
+                                            }
+                                            <option value="@tempvaldaily2 ">@tempvaldaily2</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+            </div>
         </div>
+        <hr />
         <div class="w-100 d-flex justify-content-center pt-3">
             <button type="submit" class="btn btn-primary align-self-center" id="SubmitTask">Submit <i class="far fa-paper-plane"></i></button>
         </div>
