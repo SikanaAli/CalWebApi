@@ -22,7 +22,7 @@ namespace CalWebApi
                 {
                     webBuilder.UseKestrel((k) =>
                     {
-                        //k.ListenAnyIP(5000);
+                        k.ListenAnyIP(5000);
                         //k.ListenAnyIP(5001);
                     });
                     webBuilder.UseStartup<Startup>();

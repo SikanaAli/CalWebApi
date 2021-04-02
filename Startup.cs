@@ -58,6 +58,8 @@ namespace CalWebApi
                 options.AddPolicy(name: CalenderSchedulerCorsPolicy, builder =>
                 {
                     builder.WithOrigins("https://192.168.10.88:5001");
+                    builder.WithOrigins("http://192.168.10.88:5000");
+                    //builder.AllowAnyOrigin();
                 });
             });
 
@@ -102,6 +104,7 @@ namespace CalWebApi
             {
                 ui.SwaggerEndpoint("/swagger/v1/swagger.json", "Cal API");
                 ui.RoutePrefix = "Doc";
+                ui.
 
             });
 

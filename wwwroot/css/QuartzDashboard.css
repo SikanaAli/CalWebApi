@@ -39,3 +39,8 @@ object::-webkit-scrollbar-track {
 .myClass:hover{
     background-color:pink
 }
+
+.weekly-grid{
+    display:grid;
+    grid-template-columns:auto auto auto auto;
+}
