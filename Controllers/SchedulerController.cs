@@ -43,6 +43,10 @@ namespace CalWebApi.Controllers
         }
 
 
+        public async Task<IActionResult> ScheduleSimpleTask([FromBody])
+        {
+            return Ok()
+        }
 
         /// <summary>
         /// Schedule a new task

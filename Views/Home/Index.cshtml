@@ -85,6 +85,9 @@
                 <li class="nav-item">
                     <a class="nav-link" id="monthly-tab" data-toggle="tab" href="#monthly" role="tab" aria-controls="monthly" aria-selected="false">Monthly</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="yearly-tab" data-toggle="tab" href="#yearly" role="tab" aria-controls="yearly" aria-selected="false">Yearly</a>
+                </li>
             </ul>
             <div class="tab-content" id="myTabContent">
                 <!--Tab Minutes-->
@@ -229,16 +232,16 @@
                 <!--Tab Weekly-->
                 <div class="tab-pane fade" id="weekly" role="tabpanel" aria-labelledby="weekly-tab">
                     <div class="weekly-grid mt-3">
-                        @{ 
+                        @{
                             for (int i = 0; i <= 6; i++)
                             {
                                 string dayname = DateTimeFormatInfo.CurrentInfo.DayNames[i];
                                 <div class="form-check form-check-inline">
                                     <input class="weekly-weekday-checkbox" type="checkbox" id="inlineCheckbox-@i" value="@dayname.ToLower()">
                                     <label class="form-check-label" for="inlineCheckbox-@i">&nbsp;@dayname</label>
-                                </div> 
+                                </div>
                             }
-                         }
+                        }
                     </div>
                     <div class="form-inline mt-3">
                         <label class="form-check-label">Start At</label>
@@ -289,25 +292,200 @@
                             <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
                             <label class="form-check-label" for="inlineRadio1">Day</label>
                         </div>
-                        <input type="number" max="31" min="1"  value="1"/>
-                        <label>For every</label>
-                        <select>
-                            <option></option>
+                        <input type="number" max="31" min="1" class="form-control form-control-sm" value="1" />
+                        <label class="px-2">of every</label>
+                        <select class="form-control form-control-sm">
+                            @{
+                                for (int i = 1; i <= 6; i++)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            }
                         </select>
                     </div>
-                    <div>
+                    <div class="form-inline mt-3">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                            <label class="form-check-label" for="inlineRadio1">The</label>
+                        </div>
+                        <select class="form-control form-control-sm">
+                            @{
+                                for (int i = 1; i <= 4; i++)
+                                {
+                                    string[] opt = new string[] { "First", "Second", "Third", "Fourth" };
 
+                                    <option value="@i">@opt[i - 1]</option>
+                                }
+                            }
+                        </select>
+                        <select class="form-control form-control-sm">
+                            @{
+
+                                for (int i = 0; i <= 6; i++)
+                                {
+                                    var monthylWeekDay = DateTimeFormatInfo.CurrentInfo.DayNames[i];
+                                    <option value="@monthylWeekDay.ToLower()">@monthylWeekDay</option>
+                                }
+                            }
+                        </select>
+                        <label class="px-2">of every</label>
+                        <select class="form-control form-control-sm">
+                            @{
+                                for (int i = 1; i <= 6; i++)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            }
+                        </select>
                     </div>
-                    <div>
-
+                    <div class="form-inline mt-3">
+                        <label class="form-check-label">Start At</label>
+                        <div class="form-inline ">
+                            <select class="form-control form-control-sm ml-2 mr-1" id="cron-hour-start" name="cronHourStart">
+                                @{
+                                    string monthlytemp = "";
+                                    for (int i = 0; i < 24; i++)
+                                    {
+                                        if (i < 10)
+                                        {
+                                            monthlytemp = string.Concat("0", i);
+                                        }
+                                        else
+                                        {
+                                            monthlytemp = i.ToString();
+                                        }
+                                        <option value="@monthlytemp ">@monthlytemp</option>
+                                    }
+                                }
+                            </select>
+                            :
+                            <select class="form-control form-control-sm ml-1">
+                                @{
+                                    monthlytemp = string.Empty;
+                                    for (int i = 0; i < 60; i++)
+                                    {
+                                        if (i < 10)
+                                        {
+                                            monthlytemp = string.Concat("0", i);
+                                        }
+                                        else
+                                        {
+                                            monthlytemp = i.ToString();
+                                        }
+                                        <option value="@monthlytemp">@monthlytemp</option>
+                                    }
+                                }
+                            </select>
+                        </div>
                     </div>
                 </div>
 
+                <!--Tab Yearly-->
+                <div class="tab-pane fade" id="yearly" role="tabpanel" aria-labelledby="yearly-tab">
+                    <div class="form-inline mt-3">
+                        <div class="form-check form-check-inline">
+                            <input class="weekly-weekday-checkbox" type="radio" id="yearly-radiodot" value="every">
+                            <label class="form-check-label" for="yearly-checkbox">&nbsp;Every</label>
+                        </div>
+                        <select class="form-control form-control-sm mx-1" >
+                            @{ 
+                                for (int i = 0; i < 12; i++)
+                                {
+                                    string monthName = DateTimeFormatInfo.CurrentInfo.MonthNames[i];
+                                    <option value="@monthName.ToLower()" >@monthName</option>
 
-                <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                                }
+                            }
+                        </select>
+                        <input type="number" min="1" max="31" id="yearly-every" class="form-control form-control-sm" value="1" />
+                    </div>
+                    <div class="form-inline mt-3">
+                        <div class="form-check form-check-inline">
+                            <input class="weekly-weekday-checkbox" type="radio" id="yearly-checkbox" value="every">
+                            <label class="form-check-label" for="yearly-checkbox">&nbsp;The</label>
+                        </div>
+                        <select class="form-control form-control-sm">
+                            @{
+                                for (int i = 1; i <= 4; i++)
+                                {
+                                    string[] opt = new string[] { "First", "Second", "Third", "Fourth" };
+
+                                    <option value="@i">@opt[i - 1]</option>
+                                }
+                            }
+                        </select>
+                        <select class="form-control form-control-sm">
+                            @{
+
+                                for (int i = 0; i <= 6; i++)
+                                {
+                                    var yearlylWeekDay = DateTimeFormatInfo.CurrentInfo.DayNames[i];
+                                    <option value="@yearlylWeekDay.ToLower()">@yearlylWeekDay</option>
+                                }
+                            }
+                        </select>
+                        <span class="mx-1">of</span>
+                        <select class="form-control form-control-sm">
+                            @{
+
+                                for (int i = 0; i < 12; i++)
+                                {
+                                    var yearlyMonthName= DateTimeFormatInfo.CurrentInfo.MonthNames[i];
+                                    <option value="@yearlyMonthName.ToLower()">@yearlyMonthName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-inline mt-3">
+                        <label class="form-check-label">Start At</label>
+                        <div class="form-inline ">
+                            <select class="form-control form-control-sm ml-2 mr-1" id="cron-hour-start" name="cronHourStart">
+                                @{
+                                    string yearlytemp = string.Empty;
+                                    for (int i = 0; i < 24; i++)
+                                    {
+                                        if (i < 10)
+                                        {
+                                            yearlytemp = string.Concat("0", i);
+                                        }
+                                        else
+                                        {
+                                            yearlytemp = i.ToString();
+                                        }
+                                        <option value="@yearlytemp ">@yearlytemp</option>
+                                    }
+                                }
+                            </select>
+                            :
+                            <select class="form-control form-control-sm ml-1">
+                                @{
+                                    yearlytemp = string.Empty;
+                                    for (int i = 0; i < 60; i++)
+                                    {
+                                        if (i < 10)
+                                        {
+                                            yearlytemp = string.Concat("0", i);
+                                        }
+                                        else
+                                        {
+                                            yearlytemp = i.ToString();
+                                        }
+                                        <option value="@yearlytemp">@yearlytemp</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+            </div>
+            </div>
+        <hr />
+
+        <div >
+            <div>
+                <label for="simpleTaskDiscription">Description</label>
+                <textarea id="simpleTaskDiscription" class="form-control" rows="4"></textarea>
             </div>
         </div>
-        <hr />
         <div class="w-100 d-flex justify-content-center pt-3">
             <button type="submit" class="btn btn-primary align-self-center" id="SubmitTask">Submit <i class="far fa-paper-plane"></i></button>
         </div>

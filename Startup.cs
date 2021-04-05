@@ -104,7 +104,7 @@ namespace CalWebApi
             {
                 ui.SwaggerEndpoint("/swagger/v1/swagger.json", "Cal API");
                 ui.RoutePrefix = "Doc";
-                ui.
+               
 
             });
 
