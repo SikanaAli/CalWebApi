@@ -88,6 +88,10 @@
                 <li class="nav-item">
                     <a class="nav-link" id="yearly-tab" data-toggle="tab" href="#yearly" role="tab" aria-controls="yearly" aria-selected="false">Yearly</a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link bg-danger" id="advanced-tab" data-toggle="tab" href="#advanced" role="tab" aria-controls="advanced" aria-selected="false">Advanced</a>
+                </li>
             </ul>
             <div class="tab-content" id="myTabContent">
                 <!--Tab Minutes-->
@@ -477,11 +481,124 @@
                         </div>
                     </div>
             </div>
-            </div>
+
+                <div id="advanced" class="tab-pane fade">
+                    <div class="form-group">
+                        <hr />
+                        <label class="align-self-center text-center" for="cron-output">Task Schedule</label>
+                        <div class="form-row cron-container">
+                            <div class="cron-items">
+                                <h6>seconds</h6>
+                                <select multiple="multiple" size="7" class="form-control" id="cron-seconds" onchange="updateField('seconds')">
+                                    @for (int i = 0; i < 60; i++)
+                        {
+                                    <option selected="selected" value="@i">
+                                        @{if (i < 10)
+                                    { <p>0</p>@i }
+                                else
+                                {@i}}
+                                    </option>
+                        }
+                                </select>
+                                <div class="mt-1">
+                                    <a class="btn-sm  btn-primary" href="javascript:cronHelperSelectAll('#cron-seconds')">select all</a>
+                                </div>
+                            </div>
+                            <div class="cron-items">
+                                <h6>Minutes</h6>
+                                <select multiple="multiple" size="7" class="form-control" id="cron-minutes" name="cron-minutes" onchange="updateField('minutes')">
+                                    @for (int i = 0; i < 60; i++)
+                        {
+                                    <option selected="selected" value="@i">
+                                        @{if (i < 10)
+                                    { <p>0</p>@i }
+                                else
+                                {@i}}
+                                    </option>
+                        }
+                                </select>
+                                <div class="mt-1">
+                                    <a class="btn-sm  btn-primary" href="javascript:cronHelperSelectAll('#cron-minutes')">select all</a>
+                                </div>
+                            </div>
+                            <div class="cron-items">
+                                <h6>Hours</h6>
+                                <select multiple="multiple" size="7" class="form-control form-" id="cron-hours" name="cron-hours" onchange="updateField('hours')">
+                                    @for (int i = 0; i < 24; i++)
+                        {
+                                    <option selected="selected" value="@i">
+                                        @{if (i < 10)
+                                    { <p>0</p>@i }
+                                else
+                                {@i}}
+                                    </option>
+                        }
+                                </select>
+                                <div class="mt-1">
+                                    <a class="btn-sm  btn-primary" href="javascript:cronHelperSelectAll('#cron-hours')">select all</a>
+                                </div>
+                            </div>
+                            <div class="cron-items">
+                                <h6>Days in Month</h6>
+                                <select multiple="multiple" size="7" class="form-control" id="cron-dim" name="cron-dim" onchange="updateField('dim')">
+                                    @for (int i = 0; i <= 31; i++)
+                        {
+                                    <option selected="selected" value="@AddBy(i,1)">
+                                        @{if (i < 10)
+                                    { <p>0</p>@i }
+                                else
+                                {@i}}
+                                    </option>
+                        }
+                                </select>
+                                <div class="mt-1">
+                                    <a class="btn-sm  btn-primary" href="javascript:cronHelperSelectAll('#cron-dim')">select all</a>
+                                </div>
+                            </div>
+                            <div class="cron-items">
+                                <h6>Months</h6>
+                                <select multiple="multiple" size="7" class="form-control" id="cron-months" name="cron-months" onchange="updateField('months')">
+                                    @{
+                            int count = 1;
+                            for (int i = 0; i < 12; i++)
+                            {
+                                        <option selected="selected" value="@count ">@DateTimeFormatInfo.CurrentInfo.MonthNames[i]</option>
+                                count++;
+                            }
+                                    }
+                                </select>
+                                <div class="mt-1">
+                                    <a class="btn-sm  btn-primary" href="javascript:cronHelperSelectAll('#cron-months')">select all</a>
+                                </div>
+                            </div>
+                            <div class="cron-items">
+                                <h6>Days in Week</h6>
+                                <select multiple="multiple" size="7" class="form-control" id="cron-days" name="cron-days" onchange="updateField('diw')">
+                                    @{
+                            for (int i = 0; i <= 6; i++)
+                            {
+                                        <option selected="selected" value="@i">@DateTimeFormatInfo.CurrentInfo.DayNames[i]</option>
+                            }
+                                    }
+                                </select>
+                                <div class="mt-1">
+                                    <a class="btn-sm  btn-primary" href="javascript:cronHelperSelectAll('#cron-days')">select all</a>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="mt-4">
+                            <input class="form-control" type="text" id="cron-output" name="cron-output" value="* * * * *" onkeyup="importCronExpressionFromInput('#cron-output')">
+                            <small id="cron-expression-desc"></small>
+                        </div>
+                    </div>
+                </div>
+        </div>
         <hr />
 
         <div >
-            <div>
+            <div class >
                 <label for="simpleTaskDiscription">Description</label>
                 <textarea id="simpleTaskDiscription" class="form-control" rows="4"></textarea>
             </div>

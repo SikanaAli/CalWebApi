@@ -23,5 +23,7 @@ namespace CalWebApi.Models
         public string Description { get; set; }
 
         public string CallBack { get; set; }
+
+        public CallbackType ScheduleCallbackType { get; set; }
     }
 }
