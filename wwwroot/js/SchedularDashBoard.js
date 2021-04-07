@@ -13,13 +13,19 @@ let taskTable = $("#task-dataTable").DataTable({
             text: "New",
             action: function (e, dt, node, config) {
                 $("#calendar-tab").trigger("click");
-            }
+                setTimeout(() => {
+                    $('#calendar-modal').iziModal('open');;
+                }, 200);
+                
+            },
+            className: "btn-primary"
         },
         {
             text: 'Reload',
             action: function (e, dt, node, config) {
                 dt.ajax.reload();
-            }
+            },
+            className: "btn-primary"
         }, {
             text: 'Delete',
             action: function (e, dt, node, config) {
@@ -97,14 +103,11 @@ let taskTable = $("#task-dataTable").DataTable({
                 } else {
                     swal("Opps", "It appears nothin was selected from the table below","info")
                 }
-
-
-                
                 console.log(rowCount)
-                
+                               
+            },
+            className:"btn-danger"
 
-               
-            }
         }
     ],
     select: 'multi',

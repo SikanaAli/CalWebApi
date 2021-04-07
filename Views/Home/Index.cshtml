@@ -68,10 +68,11 @@
             <input type="text" class="form-control" id="cron-task-name" name="cron-task-name" aria-describedby="Task Name" placeholder="Task Name">
         </div>
         <hr />
+        <label>Schedule</label>
         <div>
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <ul class="nav nav-tabs" id="cron-schedule-tabs" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" id="minutes-tab" data-toggle="tab" href="#task-minutes" role="tab" aria-controls="minutes" aria-selected="false">Minutes</a>
+                    <a class="nav-link active" id="minutes-tab" data-toggle="tab" href="#minutely" role="tab" aria-controls="minutes" aria-selected="false">Minutes</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="hourly-tab" data-toggle="tab" href="#hourly" role="tab" aria-controls="hourly" aria-selected="false">Hourly</a>
@@ -90,16 +91,16 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link bg-danger" id="advanced-tab" data-toggle="tab" href="#advanced" role="tab" aria-controls="advanced" aria-selected="false">Advanced</a>
+                    <a class="advanced-cron nav-link " id="advanced-tab" data-toggle="tab" href="#advanced" role="tab" aria-controls="advanced" aria-selected="false">Advanced</a>
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">
                 <!--Tab Minutes-->
-                <div class="tab-pane fade show active" id="task-minutes" role="tabpanel" aria-labelledby="minutes-tab">
+                <div class="tab-pane fade show active" id="minutely" role="tabpanel" aria-labelledby="minutes-tab">
                     <div class="row p-3">
-                        <div class="col-3 form-inline">
+                        <div class=" form-inline">
                             <label>Every</label>
-                            <select class="form-control form-control-sm ml-2" id="cron-minutes" name="cronMinutes">
+                            <select class="form-control form-control-sm ml-2" id="cron-every-minutely" name="cronEveryMinutes">
                                 @{
                                     for (int i = 1; i < 60; i++)
                                     {
@@ -482,6 +483,7 @@
                     </div>
             </div>
 
+                <!--Advanced Tab-->
                 <div id="advanced" class="tab-pane fade">
                     <div class="form-group">
                         <hr />
@@ -594,14 +596,27 @@
                         </div>
                     </div>
                 </div>
+            </div>
         </div>
         <hr />
 
-        <div >
-            <div class >
-                <label for="simpleTaskDiscription">Description</label>
-                <textarea id="simpleTaskDiscription" class="form-control" rows="4"></textarea>
+        <div>
+            <div>
+                <label>Callback</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <select class="form-control" id="cron-callback-type" name="cron-callback-type">
+                            <option value="URL">URL</option>
+                        </select>
+                    </div>
+                    <input type="text" class="form-control" id="cron-callback" name="cron-callback" placeholder="http://mysite.com/api/someting/to/do" aria-describedby="callbackprepend" required>
+                </div>
             </div>
+            <div class="mt-2">
+                <label for="cron-description">Description</label>
+                <textarea id="cron-description" name="cron-description" class="form-control" rows="4"></textarea>
+            </div>
+
         </div>
         <div class="w-100 d-flex justify-content-center pt-3">
             <button type="submit" class="btn btn-primary align-self-center" id="SubmitTask">Submit <i class="far fa-paper-plane"></i></button>

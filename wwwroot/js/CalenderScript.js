@@ -64,21 +64,38 @@ var Validator = $("#ScheduleTaskForm").validate({
             
         },
         "cron-callback": {
-            url: true
+            required: true
         }
     },
     submitHandler: (from) => {
 
+        //FetchData from Form
         var FormData = {
             "taskName": $("#cron-task-name").val().trim().toString(),
             "dateCreated": new Date().toISOString(),
-            "cronExpression": "0/5 * * * * ?" /*$("#cron-output").val().trim().toString()*/,
             "callBackUrl": $("#cron-callback").val().trim().toString(),
+            "ScheduleCallbackType": $("#cron-callback-type").val().trim().toString(),
             "discription": $("#cron-description").val().trim().toString()
         }
-        console.log(FormData)
+
+        //Get Active Schedule
+        FormData.activeSchedule = $("#cron-schedule-tabs [data-toggle=tab].active").attr("href")
+
+        switch (FormData?.activeSchedule) {
+            case "#minutely":
+
+                FormData = {
+                    ...FormData,
+                    ScheduleRecurrence: "Minutes",
+                    ScheduleData: [{ every: $("#cron-every-minutely").val().trim().toString()}]
+                }
+                console.log(FormData);
+                break;
+            default:
+        }
+        console.log(JSON.stringify(FormData))
         $.ajax({
-            url: "/api/v1/Scheduler/Task",
+            url: "/api/v1.1/Scheduler/SimpleTask",
             method: "POST",
             contentType:"application/json",
             data: JSON.stringify(FormData),

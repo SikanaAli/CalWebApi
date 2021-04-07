@@ -42,12 +42,14 @@ namespace CalWebApi.Controllers
             return await GetScheduledTasks();
         }
 
-
-        //public async Task<IActionResult> ScheduleSimpleTask([FromBody])
-        //{
-        //    //scheduler.get
-        //    return Ok();
-        //}
+        [HttpPost]
+        [Route("SimpleTask")]
+        [ApiVersion("1.1")]
+        public IActionResult ScheduleSimpleTask([FromBody]SimpleTask crontask)
+        {
+            Console.WriteLine(JObject.FromObject(crontask).ToString());
+            return Ok();
+        }
 
         /// <summary>
         /// Schedule a new task

@@ -1,4 +1,8 @@
 ﻿
+:root {
+    --custom-danger: #e83311;
+}
+
 .dataTables_length>.dt-buttons {
     padding-left:1rem;
     padding-right:1rem;
@@ -43,4 +47,9 @@ object::-webkit-scrollbar-track {
 .weekly-grid{
     display:grid;
     grid-template-columns:auto auto auto auto;
+}
+
+.advanced-cron{
+    color: var(--custom-danger)!important;
+    font-weight:600
 }

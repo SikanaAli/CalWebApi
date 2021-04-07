@@ -1,5 +1,6 @@
 ﻿using CalWebApi.CustomAttributes;
 using CalWebApi.Helpers;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,7 +19,7 @@ namespace CalWebApi.Models
 
         public RecurrenceType ScheduleRecurrence { get; set; }
 
-        public List<KeyValuePair<string,string>> ScheduleData { get; set; }
+        public JArray ScheduleData { get; set; }
 
         public string Description { get; set; }
 
