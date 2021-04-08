@@ -6,16 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net;
-
+using System.Text.Json;
 using Quartz;
 using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Filters;
 using CalWebApi.Scheduler;
 using Microsoft.Extensions.Logging;
 using Quartz.Impl.Matchers;
-
-
-
+using CalWebApi.Helpers;
 
 namespace CalWebApi.Controllers
 {
@@ -45,9 +43,34 @@ namespace CalWebApi.Controllers
         [HttpPost]
         [Route("SimpleTask")]
         [ApiVersion("1.1")]
-        public IActionResult ScheduleSimpleTask([FromBody]SimpleTask crontask)
+        [Consumes(contentType:"application/json")]
+        public async Task<IActionResult> ScheduleSimpleTask([FromBody]SimpleTask task)
         {
-            Console.WriteLine(JObject.FromObject(crontask).ToString());
+            //SimpleTask task = JsonConvert.DeserializeObject<SimpleTask>(jtask.ToString() ,new Newtonsoft.Json.Converters.StringEnumConverter());
+
+            //if (!this.ModelState.IsValid)
+            //    return BadRequest(modelState: ModelState);
+            task.Id = Guid.NewGuid();
+            switch (task.ScheduleRecurrence)
+            {
+                case RecurrenceType.Minutes:
+
+                    var simpleJob = JobBuilder.Create(jobType: typeof(TaskJob))
+                    .WithIdentity(task.Id.ToString())
+                    .WithDescription(task.Description)
+                    .UsingJobData("type", "simple")
+                    .UsingJobData("data", JObject.FromObject(task).ToString())
+                    .StoreDurably(durability: true)
+                    .Build();
+
+                    var simpleTrigger = CreateSimpleTrigger(task);
+
+                    await scheduler.ScheduleJob(simpleJob, simpleTrigger);
+                    break;
+                default:
+                    break;
+            }
+            Console.WriteLine(JsonConvert.SerializeObject(task));
             return Ok();
         }
 
@@ -299,6 +322,7 @@ namespace CalWebApi.Controllers
         {
             return JobBuilder
             .Create(jobMetadata.TaskType)
+            .UsingJobData("type","advanced")
             .UsingJobData("data",JObject.FromObject(task).ToString())
             .WithIdentity(jobMetadata.TaskId.ToString())
             .WithDescription(task.Discription)
@@ -318,6 +342,37 @@ namespace CalWebApi.Controllers
             .Build();
         }
 
+        private ITrigger CreateSimpleTrigger(SimpleTask task)
+        {
+            ITrigger simpleTrigger = null;
+            switch (task.ScheduleRecurrence)
+            {
+                case RecurrenceType.Minutes:
+                    simpleTrigger = TriggerBuilder.Create()
+                        .WithIdentity(task.Id.ToString())
+                        .WithDescription(task.TaskName)
+                        .WithSimpleSchedule(s=> {
+                            s.WithIntervalInMinutes(int.Parse((string)task.ScheduleData[0]));
+                            s.RepeatForever();
+                        })
+                        .Build();
+                    break;
+                case RecurrenceType.Hourly:
+                    break;
+                case RecurrenceType.Daily:
+                    break;
+                case RecurrenceType.Weekly:
+                    break;
+                case RecurrenceType.Monthly:
+                    break;
+                case RecurrenceType.Yearly:
+                    break;
+                default:
+                    break;
+            }
+
+            return simpleTrigger;
+        }
         //Check if Jobkey Matched Job
         private async Task<bool> CheckIfKeyExists(string taskid)
         {
@@ -369,8 +424,8 @@ namespace CalWebApi.Controllers
                             Group = group,
                             TaskName = trigger.Description,
                             Discription = jdetail.Description,
-                            NextFireTime = trigger.GetNextFireTimeUtc(),
-                            PreviousFireTime = trigger.GetPreviousFireTimeUtc()
+                            NextFireTime = trigger.GetNextFireTimeUtc().Value.DateTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                            PreviousFireTime = trigger.GetPreviousFireTimeUtc().Value.DateTime.ToString("yyyy-MM-dd HH:mm:ss")
                         });
                     }
                 }

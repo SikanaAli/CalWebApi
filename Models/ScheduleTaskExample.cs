@@ -14,7 +14,7 @@ namespace CalWebApi.Models
             CronExpression = "5 * * * *",
             Discription = "My task does somthing",
             DateCreated = new DateTime(),
-            Id = 0,
+            Id = Guid.NewGuid(),
         };
     }
 }

@@ -21,7 +21,22 @@ namespace CalWebApi.Scheduler
 
         public Task Execute(IJobExecutionContext context)
         {
-            ScheduleTask data = JsonConvert.DeserializeObject<ScheduleTask>(context.JobDetail.JobDataMap.GetString("data"));
+            ScheduleTask data = new ScheduleTask();
+            if (context.JobDetail.JobDataMap.GetString("type") != "simple")
+            {
+                data = JsonConvert.DeserializeObject<ScheduleTask>(context.JobDetail.JobDataMap.GetString("data"));
+            }
+            else
+            {
+                SimpleTask temp = JsonConvert.DeserializeObject<SimpleTask>(context.JobDetail.JobDataMap.GetString("data"));
+                
+                data.Discription = temp.Description;
+                data.Id = temp.Id;
+                data.TaskName = temp.TaskName;
+                data.DateCreated = temp.DateCreated;
+                data.CallBackUrl = temp.CallBack;
+
+            }
 
             try
             {

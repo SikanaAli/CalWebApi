@@ -44,7 +44,10 @@ namespace CalWebApi
         {
             services.AddControllersWithViews()
                 .AddRazorRuntimeCompilation()
-                .AddJsonOptions(opt=> opt.JsonSerializerOptions.PropertyNamingPolicy = null );
+                .AddJsonOptions(opt=> {
+                    opt.JsonSerializerOptions.PropertyNamingPolicy = null;
+                    opt.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+                });
             services.AddApiVersioning(v =>
             {
                 v.DefaultApiVersion = new ApiVersion(1, 0);
@@ -59,7 +62,7 @@ namespace CalWebApi
                 {
                     builder.WithOrigins("https://192.168.10.88:5001");
                     builder.WithOrigins("http://192.168.10.88:5000");
-                    //builder.AllowAnyOrigin();
+                    builder.AllowAnyOrigin();
                 });
             });
 

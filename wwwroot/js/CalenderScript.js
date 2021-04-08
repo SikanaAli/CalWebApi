@@ -73,9 +73,9 @@ var Validator = $("#ScheduleTaskForm").validate({
         var FormData = {
             "taskName": $("#cron-task-name").val().trim().toString(),
             "dateCreated": new Date().toISOString(),
-            "callBackUrl": $("#cron-callback").val().trim().toString(),
+            "callBack": $("#cron-callback").val().trim().toString(),
             "ScheduleCallbackType": $("#cron-callback-type").val().trim().toString(),
-            "discription": $("#cron-description").val().trim().toString()
+            "Description": $("#cron-description").val().trim().toString()
         }
 
         //Get Active Schedule
@@ -87,24 +87,29 @@ var Validator = $("#ScheduleTaskForm").validate({
                 FormData = {
                     ...FormData,
                     ScheduleRecurrence: "Minutes",
-                    ScheduleData: [{ every: $("#cron-every-minutely").val().trim().toString()}]
+                    ScheduleData: [$("#cron-every-minutely").val().trim().toString()]
                 }
                 console.log(FormData);
                 break;
             default:
         }
-        console.log(JSON.stringify(FormData))
+        
         $.ajax({
             url: "/api/v1.1/Scheduler/SimpleTask",
             method: "POST",
             contentType:"application/json",
             data: JSON.stringify(FormData),
             success: (result) => {
+                swal("Task Creation", JSON.stringify(result), "success")
                 console.log(result)
             },
             error: (result) => {
+                swal("Task Creation", result.responseText, "error")
                 console.log(result)
             },
+            
+        }).fail(result => {
+               console.log(result) 
         });
     }
 })

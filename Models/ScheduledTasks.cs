@@ -11,8 +11,8 @@ namespace CalWebApi.Models
         public string TaskName { get; set; }
         public string Group { get; set; }
         public string Discription { get; set;}
-        public DateTimeOffset? PreviousFireTime { get; set; }
-        public DateTimeOffset? NextFireTime { get; set; }
+        public string PreviousFireTime { get; set; }
+        public string NextFireTime { get; set; }
 
     }
 }

@@ -9,7 +9,7 @@ namespace CalWebApi.Models
     public class ScheduleTask
     {
         [SwaggerExclude]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         public string TaskName { get; set; }
