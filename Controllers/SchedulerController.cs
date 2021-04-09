@@ -41,7 +41,7 @@ namespace CalWebApi.Controllers
         }
 
         [HttpPost]
-        [Route("SimpleTask")]
+        [Route("Task")]
         [ApiVersion("1.1")]
         [Consumes(contentType:"application/json")]
         public async Task<IActionResult> ScheduleSimpleTask([FromBody]SimpleTask task)
@@ -50,27 +50,28 @@ namespace CalWebApi.Controllers
 
             //if (!this.ModelState.IsValid)
             //    return BadRequest(modelState: ModelState);
-            task.Id = Guid.NewGuid();
-            switch (task.ScheduleRecurrence)
-            {
-                case RecurrenceType.Minutes:
+            //task.Id = Guid.NewGuid();
+            //switch (task.ScheduleRecurrence)
+            //{
+            //    case RecurrenceType.Minutes:
 
-                    var simpleJob = JobBuilder.Create(jobType: typeof(TaskJob))
-                    .WithIdentity(task.Id.ToString())
-                    .WithDescription(task.Description)
-                    .UsingJobData("type", "simple")
-                    .UsingJobData("data", JObject.FromObject(task).ToString())
-                    .StoreDurably(durability: true)
-                    .Build();
+            //        var simpleJob = JobBuilder.Create(jobType: typeof(TaskJob))
+            //        .WithIdentity(task.Id.ToString())
+            //        .WithDescription(task.Description)
+            //        .UsingJobData("type", "simple")
+            //        .UsingJobData("data", JObject.FromObject(task).ToString())
+            //        .StoreDurably(durability: true)
+            //        .Build();
 
-                    var simpleTrigger = CreateSimpleTrigger(task);
+            //        var simpleTrigger = CreateSimpleTrigger(task);
 
-                    await scheduler.ScheduleJob(simpleJob, simpleTrigger);
-                    break;
-                default:
-                    break;
-            }
+            //        await scheduler.ScheduleJob(simpleJob, simpleTrigger);
+            //        break;
+            //    default:
+            //        break;
+            //}
             Console.WriteLine(JsonConvert.SerializeObject(task));
+            Console.WriteLine(task.ScheduleData["every"].ToString());
             return Ok();
         }
 
@@ -352,12 +353,22 @@ namespace CalWebApi.Controllers
                         .WithIdentity(task.Id.ToString())
                         .WithDescription(task.TaskName)
                         .WithSimpleSchedule(s=> {
-                            s.WithIntervalInMinutes(int.Parse((string)task.ScheduleData[0]));
+                            s.WithIntervalInMinutes(int.Parse(task.ScheduleData["every"].ToString()));
                             s.RepeatForever();
                         })
                         .Build();
                     break;
                 case RecurrenceType.Hourly:
+                    //simpleTrigger = TriggerBuilder.Create()
+                    //    .WithIdentity(task.Id.ToString())
+                    //    .WithDescription(task.TaskName)
+                    //    .WithSimpleSchedule(s =>
+                    //    {
+                    //        s.WithIntervalInHours()
+                    //    })
+                    //    .Build();
+
+
                     break;
                 case RecurrenceType.Daily:
                     break;
@@ -424,8 +435,8 @@ namespace CalWebApi.Controllers
                             Group = group,
                             TaskName = trigger.Description,
                             Discription = jdetail.Description,
-                            NextFireTime = trigger.GetNextFireTimeUtc().Value.DateTime.ToString("yyyy-MM-dd HH:mm:ss"),
-                            PreviousFireTime = trigger.GetPreviousFireTimeUtc().Value.DateTime.ToString("yyyy-MM-dd HH:mm:ss")
+                            NextFireTime = trigger.GetNextFireTimeUtc().Value.DateTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss"),
+                            PreviousFireTime = trigger.GetPreviousFireTimeUtc().Value.DateTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")
                         });
                     }
                 }

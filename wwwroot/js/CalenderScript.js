@@ -87,15 +87,37 @@ var Validator = $("#ScheduleTaskForm").validate({
                 FormData = {
                     ...FormData,
                     ScheduleRecurrence: "Minutes",
-                    ScheduleData: [$("#cron-every-minutely").val().trim().toString()]
+                    ScheduleData: {
+                        every: $("#cron-every-minutely").val().trim().toString()
+                    }
                 }
                 console.log(FormData);
+                break;
+            case "#hourly":
+
+                var temp = {}
+                if ($("[name=hourly-every]:checked").val().toString() === "option1") {
+                    temp = {
+                        "every": $("#hourly-every-interval").val().toString().trim()
+                    }
+                } else if ($("[name=hourly-every]:checked").val().toString() === "option2") {
+                    temp = {
+                        "startat": `${$("#hourly-every-interval").val().toString().trim()}:${$("#hourly-every-start-at-2").val().toString().trim()}`
+                    }
+                }
+
+                FormData = {
+                    ...FormData,
+                    ScheduleRecurrence: "Hourly",
+                    ScheduleData: {...temp}
+                }
+                console.log(FormData)
                 break;
             default:
         }
         
         $.ajax({
-            url: "/api/v1.1/Scheduler/SimpleTask",
+            url: "/api/v1.1/Scheduler/Task",
             method: "POST",
             contentType:"application/json",
             data: JSON.stringify(FormData),

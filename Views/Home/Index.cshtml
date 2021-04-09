@@ -116,28 +116,24 @@
                 <div class="tab-pane fade" id="hourly" role="tabpanel" aria-labelledby="hourly-tab">
                     <div class=" p-3">
                         <div class="form-inline">
-                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                            <label class="form-check-label">
+                            <input class="form-check-input hourly-radio" type="radio" name="hourly-every" id="hourly-every-1" value="option1">
+                            <label class="form-check-label" for="hourly-every-1">Every</label>
+                            <select class="form-control form-control-sm ml-2" id="hourly-every-interval" name="cronHourly">
+                                @{
 
-                                Every
-                                <select class="form-control form-control-sm ml-2" id="cron-hourly" name="cronHourly">
-                                    @{
-
-                                        for (int i = 1; i < 25; i++)
-                                        {
-                                            <option value="@i">@i</option>
-                                        }
+                                    for (int i = 1; i < 25; i++)
+                                    {
+                                        <option value="@i">@i</option>
                                     }
-                                </select>
-                            </label>
+                                }
+                            </select>
                         </div>
-
                         <div class="form-inline mt-3">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                                <label class="form-check-label" for="inlineRadio1">Start at</label>
+                                <input class="form-check-input hourly-radio" type="radio" name="hourly-every" id="hourly-every-2" value="option2">
+                                <label class="form-check-label" for="hourly-every-2">Start at</label>
                                 <div class="form-inline ">
-                                    <select class="form-control form-control-sm ml-2 mr-1" id="cron-hour-start" name="cronHourStart">
+                                    <select class="form-control form-control-sm ml-2 mr-1" id="hourly-every-start-at" name="HourlyStartAt">
                                         @{
                                             string tempval = "";
                                             for (int i = 0; i < 24; i++)
@@ -155,7 +151,7 @@
                                         }
                                     </select>
                                     :
-                                    <select class="form-control form-control-sm ml-1">
+                                    <select class="form-control form-control-sm ml-1" id="hourly-every-start-at-2">
                                         @{
                                             string tempval2 = "";
                                             for (int i = 0; i < 60; i++)

@@ -26,7 +26,7 @@ namespace CalWebApi.Models
         public RecurrenceType ScheduleRecurrence { get; set; }
 
         [Required]
-        public List<string> ScheduleData { get; set; }
+        public Dictionary<string,object> ScheduleData { get; set; }
 
         public string Description { get; set; }
         [Required]
