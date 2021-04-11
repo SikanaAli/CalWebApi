@@ -8,6 +8,7 @@ namespace CalWebApi.Models
     public class ScheduledTasks
     {
         public string DT_RowId { get; set; }
+        public string DT_RowClass { get; set; }
         public string TaskName { get; set; }
         public string Group { get; set; }
         public string Discription { get; set;}

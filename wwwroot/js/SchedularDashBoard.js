@@ -2,14 +2,20 @@
 
 let nextRefreshEle = $("#next-refresh-time");
 
-
+let Endpoints = {
+    getTasks: "/api/v1/Scheduler",
+    PauseTasks: "/api/v1/Scheduler/Pause/",
+    UpauseTasks: "/api/v1/Scheduler/Unpause",
+    ScheduleCronTask: "/api/v1/Scheduler/Task",
+    ScheduleSimpleTask: "/api/v1.1/Scheduler/Task"
+}
 
 let taskTable = $("#task-dataTable").DataTable({
     dom: "<'row'<'col-sm-12 col-md-6'Bl><'col-sm-12 col-md-6'f>>" +
         "<'row'<'col-sm-12't>>" +
         "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
     buttons: [
-        {
+        { //NEW BTN
             text: "New",
             action: function (e, dt, node, config) {
                 $("#calendar-tab").trigger("click");
@@ -18,15 +24,170 @@ let taskTable = $("#task-dataTable").DataTable({
                 }, 200);
                 
             },
-            className: "btn-primary"
+            className: "btn-success"
         },
-        {
+        { //RELOAD BTN
             text: 'Reload',
             action: function (e, dt, node, config) {
                 dt.ajax.reload();
             },
-            className: "btn-primary"
-        }, {
+            className: "btn-success"
+        },
+        { //PAUSE BTN
+            text: "Pause",
+            action: function (e, dt, node, config) {
+                let rowCount = dt.rows({ selected: true }).data().length;
+                if (rowCount > 0) {
+                    let msgText = 'Are you sure you want to <strong>Pause</strong> the Task';
+
+                    if (rowCount > 1) msgText = msgText + 's';
+                    var rows = []
+                    for (var i = 0; i <= rowCount - 1; i++) {
+                        rows.push(dt.rows({ selected: true }).data()[i].DT_RowId)
+                    }
+                    swal({
+                        text: msgText,
+                        icon: 'warning',
+                        dangerMode: true,
+                        buttons: {
+                            cancel: "Cancel",
+                            confirm: {
+                                text: "Yes, Pause",
+                                value: "confirm",
+                                className: "myClass"
+                            }
+                        }
+                    }).then(btnVal => {
+                        switch (btnVal) {
+                            case "confirm":
+
+
+                                let pauseData = {
+                                    TaskIds: rows,
+                                    count: rowCount
+                                }
+                                console.log(JSON.stringify(pauseData))
+                                $.ajax({
+                                    url: Endpoints.PauseTasks,
+                                    contentType: "application/json",
+                                    method: "PUT",
+                                    data: JSON.stringify(pauseData),
+                                    success: function (result) {
+
+                                        swal("Pause", temp.reponse, "success")
+                                    },
+                                    error: function (jqXHR, exception) {
+                                        swal("Pause", jqXHR.statusText, "error")
+                                    },
+
+
+                                }).fail((jqXHR, expetion) => {
+                                    swal("Pause", "somthing went wrong", "error")
+                                })
+
+
+                                break;
+                            case null:
+                                swal.stopLoading();
+                                swal.close();
+                                break;
+                            default:
+                                swal("Pause", "No Action", "info")
+
+                        }
+                    }).catch(err => {
+                        if (err) {
+                            swal("Oh noes!", err, "error");
+                        } else {
+                            swal.stopLoading();
+                            swal.close();
+                        }
+                    });
+
+                } else {
+                    swal("Opps", "It appears nothin was selected from the table below", "info")
+                }
+            },
+            className:"btn-secondary"
+        },
+        { //UNPAUSE BTN
+            text: "Resume",
+            action: function (e, dt, node, config) {
+                let rowCount = dt.rows({ selected: true }).data().length;
+                if (rowCount > 0) {
+                    let msgText = 'Are you sure you want to Unpause the Task';
+
+                    if (rowCount > 1) msgText = msgText + 's';
+                    var rows = []
+                    for (var i = 0; i <= rowCount - 1; i++) {
+                        rows.push(dt.rows({ selected: true }).data()[i].DT_RowId)
+                    }
+                    swal({
+                        text: msgText,
+                        icon: 'warning',
+                        dangerMode: true,
+                        buttons: {
+                            cancel: "Cancel",
+                            confirm: {
+                                text: "Yes, Unpause",
+                                value: "confirm",
+                                className: "myClass"
+                            }
+                        }
+                    }).then(btnVal => {
+                        switch (btnVal) {
+                            case "confirm":
+                                
+
+                                let unpauseData = {
+                                    TaskIds: rows,
+                                    count: rowCount
+                                }
+                                console.log(JSON.stringify(unpauseData))
+                                $.ajax({
+                                    url: Endpoints.UpauseTasks,
+                                    contentType: "application/json",
+                                    method: "PUT",
+                                    data: JSON.stringify(unpauseData),
+                                    success: function (result) {
+                                         
+                                        swal("Unpause", temp.reponse, "success")
+                                    },
+                                    error: function (jqXHR, exception) {
+                                        swal("Unpause", jqXHR.statusText, "error")
+                                    },
+
+
+                                }).fail((jqXHR, expetion) => {
+                                    swal("Unpause", "somthing went wrong", "error")
+                                })
+
+
+                                break;
+                            case null:
+                                swal.stopLoading();
+                                swal.close();
+                                break;
+                            default:
+                                swal("Unpause", "No Action", "info")
+
+                        }
+                    }).catch(err => {
+                        if (err) {
+                            swal("Oh noes!", err, "error");
+                        } else {
+                            swal.stopLoading();
+                            swal.close();
+                        }
+                    });
+
+                } else {
+                    swal("Opps", "It appears nothin was selected from the table below", "info")
+                }
+            },
+            className: "btn-info"
+        },
+        { //DELETE BTN
             text: 'Delete',
             action: function (e, dt, node, config) {
 
@@ -39,7 +200,6 @@ let taskTable = $("#task-dataTable").DataTable({
                     for (var i = 0; i <= rowCount - 1; i++) {
                         rows.push(dt.rows({ selected: true }).data()[i].DT_RowId)
                     }
-                    
                     swal({
                         text: msgText,
                         icon: 'warning',
@@ -61,7 +221,6 @@ let taskTable = $("#task-dataTable").DataTable({
                                     TaskIds: rows,
                                     count:rowCount
                                 }
-
                                 console.log(JSON.stringify(deleteData))
                                 $.ajax({
                                     url: deleteUrl,

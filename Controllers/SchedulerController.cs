@@ -155,26 +155,34 @@ namespace CalWebApi.Controllers
         ///
         /// </remarks>
         /// <returns>Status code and messages where necessary</returns>
-        /// <param name="taskid"></param>
+        /// <param name="taskids"></param>
         /// <response code="200">Reruns 201 status and 'Task Schdeuled'</response>
         /// <response code="400">If the json is not stuctured well or invalid data</response>  
         [HttpPut]
         [ApiVersion("1.0")]
-        [Route("Unschedule")]
+        [Route("Pause")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [SwaggerRequestExample(typeof(JObject), typeof(ScheduleTaskExample))]
-        public async Task<IActionResult> UnScheduleTask([FromBody]TaskIdFromBody taskid)
+        public async Task<IActionResult> PauseTask([FromBody]TaskIdFromBody taskids)
         {
-            Guid id;
-            if (Guid.TryParse(taskid.TaskID,out id))
+            try
             {
-                TriggerKey key = new TriggerKey(taskid.TaskID);
-                var isOk = await scheduler.UnscheduleJob(key);
-                string resp = isOk ? "Task UnScheduled" : "Task Not Found";
-                return Ok(resp);
+               
+                foreach (var taskKey in taskids.TaskIDs)
+                {
+                    await scheduler.PauseJob(new JobKey(Guid.Parse(taskKey).ToString()));
+                }
+                return Ok();
             }
-            return BadRequest("Invalid ID");
+            catch (Exception)
+            {
+
+                return BadRequest("Invalid ID");
+            }
+
+            
+            
         }
 
 
@@ -187,57 +195,37 @@ namespace CalWebApi.Controllers
         ///     PUT /Reschedule
         ///     
         ///     {
-        ///         taskid:task_id_goes_here
+        ///         taskid:[task_ids_goes_here]
         ///     }
         ///     
         ///
         /// </remarks>
         /// <returns>Status code and messages where necessary</returns>
-        /// <param name="taskid"></param>
+        /// <param name="tasks"></param>
         /// <response code="200">Reruns 201 status and 'Task Schdeuled'</response>
         /// <response code="400">If the json is not stuctured well or invalid data</response>  
         [HttpPut]
         [ApiVersion("1.0")]
-        [Route("Reschedule")]
+        [Route("Unpause")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> RescheduleTask([FromBody]TaskIdFromBody taskid)
+        public async Task<IActionResult> RescheduleTask([FromBody]TaskIdFromBody tasks)
         {
-            Guid tempGuid;
-            if (Guid.TryParse(taskid.TaskID, out tempGuid))
+            try
             {
-                //if (await CheckIfKeyExists(taskid))
-                //    return BadRequest("Invalid Task ID");
-
-                TriggerKey tkey = new TriggerKey(taskid.TaskID);
-                JobKey jKey = new JobKey(taskid.TaskID);
-                var jDetail = await scheduler.GetJobDetail(jKey);
-                ScheduleTask task = JsonConvert.DeserializeObject<ScheduleTask>(jDetail.JobDataMap.GetString("data"));
-
-                Console.WriteLine("Rescheduled Job Data");
-                Console.WriteLine(JObject.FromObject(task).ToString());
-
-                Type newTriggerTaskType = jDetail.JobType;
-
-                
-                var newTaskMetadata = new TaskMetadata(Guid.Parse(taskid.TaskID), newTriggerTaskType, task.TaskName, task.CronExpression);
-
-                //scheduler.ScheduleJob(CreateTriggerForJob(newTaskMetadata))
-
-                var isRescheduled = await scheduler.ScheduleJob(CreateTriggerForJob(newTaskMetadata,jDetail));
-
-                string resp = "Is Null";
-                if (isRescheduled == null)
+                foreach (var id in tasks.TaskIDs)
                 {
-                    resp += " Trigger";
+                    JobKey key = new JobKey(Guid.Parse(id).ToString());
+                    await scheduler.ResumeJob(key);
                 }
-                else
-                {
-                    resp = $"Trigger Created Dateoffset{isRescheduled}";
-                }
-                return Created(Request.Path, $"Task Rescheduled {resp}");
+                return Ok();
             }
-            return BadRequest("Invalid Task Id");
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+
         }
 
 
@@ -429,14 +417,20 @@ namespace CalWebApi.Controllers
                     var triggers = await scheduler.GetTriggersOfJob(Taskkey);
                     foreach (var trigger in triggers)
                     {
+                        string rowClass = string.Empty;
+                        TriggerState state = await scheduler.GetTriggerState(trigger.Key);
+                        if (state == TriggerState.Paused)
+                            rowClass = "paused";
+
                         _scheduledTasks.Add(new ScheduledTasks
                         {
                             DT_RowId = trigger.Key.Name,
+                            DT_RowClass = rowClass,
                             Group = group,
                             TaskName = trigger.Description,
                             Discription = jdetail.Description,
-                            NextFireTime = trigger.GetNextFireTimeUtc().Value.DateTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss"),
-                            PreviousFireTime = trigger.GetPreviousFireTimeUtc().Value.DateTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")
+                            NextFireTime = trigger.GetNextFireTimeUtc().Value.DateTime.ToLocalTime().ToString("HH:mm:ss dd-MMM-yyyy").ToUpper(),
+                            PreviousFireTime = trigger.GetPreviousFireTimeUtc().Value.DateTime.ToLocalTime().ToString("HH:mm:ss dd-MMM-yyyy").ToUpper()
                         });
                     }
                 }

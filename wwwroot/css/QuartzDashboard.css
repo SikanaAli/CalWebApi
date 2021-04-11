@@ -53,3 +53,8 @@ object::-webkit-scrollbar-track {
     color: var(--custom-danger)!important;
     font-weight:600
 }
+
+.paused{
+    background-color : silver!important;
+    cursor:pointer;
+}

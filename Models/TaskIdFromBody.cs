@@ -7,6 +7,7 @@ namespace CalWebApi.Models
 {
     public class TaskIdFromBody
     {
-        public string TaskID { get; set; }
+        public List<string> TaskIDs { get; set; }
+        public int Count { get; set; }
     }
 }
