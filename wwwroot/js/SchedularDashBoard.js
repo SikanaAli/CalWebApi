@@ -5,9 +5,9 @@ let nextRefreshEle = $("#next-refresh-time");
 let Endpoints = {
     getTasks: "/api/v1/Scheduler",
     PauseTasks: "/api/v1/Scheduler/Pause/",
-    UpauseTasks: "/api/v1/Scheduler/Unpause",
+    UpauseTasks: "/api/v1/Scheduler/Resume",
     ScheduleCronTask: "/api/v1/Scheduler/Task",
-    ScheduleSimpleTask: "/api/v1.1/Scheduler/Task"
+    ScheduleSimpleTask: "/api/v1.1/Scheduler/SimpleTask"
 }
 
 let taskTable = $("#task-dataTable").DataTable({

@@ -117,7 +117,7 @@ var Validator = $("#ScheduleTaskForm").validate({
         }
         
         $.ajax({
-            url: "/api/v1.1/Scheduler/Task",
+            url: "/api/v1.1/Scheduler/SimpleTask",
             method: "POST",
             contentType:"application/json",
             data: JSON.stringify(FormData),

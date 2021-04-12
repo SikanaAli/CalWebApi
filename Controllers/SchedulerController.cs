@@ -41,35 +41,35 @@ namespace CalWebApi.Controllers
         }
 
         [HttpPost]
-        [Route("Task")]
+        [Route("SimpleTask")]
         [ApiVersion("1.1")]
         [Consumes(contentType:"application/json")]
         public async Task<IActionResult> ScheduleSimpleTask([FromBody]SimpleTask task)
         {
             //SimpleTask task = JsonConvert.DeserializeObject<SimpleTask>(jtask.ToString() ,new Newtonsoft.Json.Converters.StringEnumConverter());
 
-            //if (!this.ModelState.IsValid)
-            //    return BadRequest(modelState: ModelState);
-            //task.Id = Guid.NewGuid();
-            //switch (task.ScheduleRecurrence)
-            //{
-            //    case RecurrenceType.Minutes:
+            if (!this.ModelState.IsValid)
+                return BadRequest(modelState: ModelState);
+            task.Id = Guid.NewGuid();
+            switch (task.ScheduleRecurrence)
+            {
+                case RecurrenceType.Minutes:
 
-            //        var simpleJob = JobBuilder.Create(jobType: typeof(TaskJob))
-            //        .WithIdentity(task.Id.ToString())
-            //        .WithDescription(task.Description)
-            //        .UsingJobData("type", "simple")
-            //        .UsingJobData("data", JObject.FromObject(task).ToString())
-            //        .StoreDurably(durability: true)
-            //        .Build();
+                    var simpleJob = JobBuilder.Create(jobType: typeof(TaskJob))
+                    .WithIdentity(task.Id.ToString())
+                    .WithDescription(task.Description)
+                    .UsingJobData("type", "simple")
+                    .UsingJobData("data", JObject.FromObject(task).ToString())
+                    .StoreDurably(durability: true)
+                    .Build();
 
-            //        var simpleTrigger = CreateSimpleTrigger(task);
+                    var simpleTrigger = CreateSimpleTrigger(task);
 
-            //        await scheduler.ScheduleJob(simpleJob, simpleTrigger);
-            //        break;
-            //    default:
-            //        break;
-            //}
+                    await scheduler.ScheduleJob(simpleJob, simpleTrigger);
+                    break;
+                default:
+                    break;
+            }
             Console.WriteLine(JsonConvert.SerializeObject(task));
             Console.WriteLine(task.ScheduleData["every"].ToString());
             return Ok();
@@ -206,7 +206,7 @@ namespace CalWebApi.Controllers
         /// <response code="400">If the json is not stuctured well or invalid data</response>  
         [HttpPut]
         [ApiVersion("1.0")]
-        [Route("Unpause")]
+        [Route("Resume")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> RescheduleTask([FromBody]TaskIdFromBody tasks)
@@ -422,6 +422,8 @@ namespace CalWebApi.Controllers
                         if (state == TriggerState.Paused)
                             rowClass = "paused";
 
+
+                        
                         _scheduledTasks.Add(new ScheduledTasks
                         {
                             DT_RowId = trigger.Key.Name,
@@ -431,6 +433,7 @@ namespace CalWebApi.Controllers
                             Discription = jdetail.Description,
                             NextFireTime = trigger.GetNextFireTimeUtc().Value.DateTime.ToLocalTime().ToString("HH:mm:ss dd-MMM-yyyy").ToUpper(),
                             PreviousFireTime = trigger.GetPreviousFireTimeUtc().Value.DateTime.ToLocalTime().ToString("HH:mm:ss dd-MMM-yyyy").ToUpper()
+
                         });
                     }
                 }
