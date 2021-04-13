@@ -11,9 +11,9 @@ let Endpoints = {
 }
 
 let taskTable = $("#task-dataTable").DataTable({
-    dom: "<'row'<'col-sm-12 col-md-6'Bl><'col-sm-12 col-md-6'f>>" +
-        "<'row'<'col-sm-12't>>" +
-        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+    dom: "<'row'<'col s12 m6'Bl><'col s2 m6'f>>" +
+        "<'row'<'col s12't>>" +
+        "<'row'<'col s15 m5'i><'col s12 m7'p>>",
     buttons: [
         { //NEW BTN
             text: "New",

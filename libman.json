@@ -81,6 +81,10 @@
       "provider": "jsdelivr",
       "library": "sweetalert@2.1.2",
       "destination": "wwwroot/lib/sweetalert/"
+    },
+    {
+      "library": "materialize@1.0.0",
+      "destination": "wwwroot/lib/materialize/"
     }
   ]
 }
