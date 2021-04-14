@@ -197,3 +197,6 @@ body {
         transition: 0s
     }
 
+.indicator {
+    bottom: 2.5px !important;
+}

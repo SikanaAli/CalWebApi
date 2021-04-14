@@ -11,9 +11,9 @@ let Endpoints = {
 }
 
 let taskTable = $("#task-dataTable").DataTable({
-    dom: "<'row'<'col s12 m6'Bl><'col s2 m6'f>>" +
-        "<'row'<'col s12't>>" +
-        "<'row'<'col s15 m5'i><'col s12 m7'p>>",
+    dom: "<'row '<'col s12 m3'l><'col s12 m6 center'B><'col s12 m3'f>>" +
+        "<'col s12't>" +
+        "<'col s12 m5'i><'col s12 m7'p>",
     buttons: [
         { //NEW BTN
             text: "New",
@@ -24,14 +24,14 @@ let taskTable = $("#task-dataTable").DataTable({
                 }, 200);
                 
             },
-            className: "btn-success"
+            className: "blue"
         },
         { //RELOAD BTN
             text: 'Reload',
             action: function (e, dt, node, config) {
                 dt.ajax.reload();
             },
-            className: "btn-success"
+            className: "green"
         },
         { //PAUSE BTN
             text: "Pause",
@@ -265,7 +265,7 @@ let taskTable = $("#task-dataTable").DataTable({
                 console.log(rowCount)
                                
             },
-            className:"btn-danger"
+            className:"red"
 
         }
     ],
@@ -283,8 +283,8 @@ let taskTable = $("#task-dataTable").DataTable({
     ],
 });
 
-taskTable.buttons().container()
-    .appendTo($('#task-dataTable_length', taskTable.table().container()));
+//taskTable.buttons().container()
+//    .appendTo($('#task-dataTable_length', taskTable.table().container()));
 
 const InitElements = () => {
     nextRefreshEle.text("The Table is Refreshed every 6 sec")
@@ -296,6 +296,7 @@ const InitElements = () => {
 //On Page Load
 $(() => {
     InitElements()
+    $('.tabs').tabs();
 })
 
 
