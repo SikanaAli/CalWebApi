@@ -10,10 +10,13 @@ let Endpoints = {
     ScheduleSimpleTask: "/api/v1.1/Scheduler/SimpleTask"
 }
 
+
+
+
 let taskTable = $("#task-dataTable").DataTable({
-    dom: "<'row '<'col s12 m3'l><'col s12 m6 center'B><'col s12 m3'f>>" +
+    dom: "<'row '<'col s12 m3'l><'col s12 m5 center'B><'col s12 m4'f>>" +
         "<'col s12't>" +
-        "<'col s12 m5'i><'col s12 m7'p>",
+        "<'row center'<'col s12 m12'p>>",
     buttons: [
         { //NEW BTN
             text: "New",
@@ -297,6 +300,7 @@ const InitElements = () => {
 $(() => {
     InitElements()
     $('.tabs').tabs();
+    //$('label select').formSelect({ classes: 'row col s10' });
 })
 
 

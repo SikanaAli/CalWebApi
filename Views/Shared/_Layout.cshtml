@@ -3,21 +3,22 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CalWebApi</title>
-    <link rel="stylesheet" href="~/lib/fontawesome/css/all.min.css" />
+    <title>@ViewData["Title"] - IoT Scheduler</title>
+
     <link rel="stylesheet" href="~/lib/izimodal/css/iziModal.min.css">
     <link rel="stylesheet" href="~/css/site.css" />
-    @*<link rel="stylesheet" href="~/lib/DataTables/DataTables-1.10.24/css/dtMaterialize.css" />*@
+
+
     <link rel="stylesheet" href="~/lib/materialize/css/materialize.min.css" />
-    <link rel="stylesheet" href="~/lib/DataTables/datatables.css" />
-    
+
     <link rel="stylesheet" href="~/css/QuartzDashboard.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
     @RenderSection("Styles", required: false)
 </head>
 <body>
   
-            <div class="col s12 cyan darken-1 z-depth-1 center" style="height:3rem">
-                <ul class="tabs tabs-transparent right hide-on-med-and-down" id="myTab" role="tablist">
+            <div class="col s12 cyan darken-1 z-depth-1 center " style="width:100vw!important;height:3rem">
+                <ul class="tabs tabs-transparent right " id="myTab" role="tablist">
                     <li class="tab">
                         <a class="active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
                     </li>
@@ -31,14 +32,14 @@
             </div>
         
     
-    <div class="container" style="margin-top:2rem">
-        <main role="main" class="row">
+    <div class="container" style="margin-top:2rem; padding-bottom:70px">
+        <main role="main" class="row z-depth-1" style="padding:1rem">
 
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer border-top" style="width:100vw">
         <div class="container">
             &copy; 2021 - CalWebApi - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
