@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - IoT Scheduler</title>
 
-    <link rel="stylesheet" href="~/lib/izimodal/css/iziModal.min.css">
-    <link rel="stylesheet" href="~/css/site.css" />
+    
 
 
     <link rel="stylesheet" href="~/lib/materialize/css/materialize.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
 
     <link rel="stylesheet" href="~/css/QuartzDashboard.css" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
@@ -18,15 +18,15 @@
 <body>
   
             <div class="col s12 cyan darken-1 z-depth-1 center " style="width:100vw!important;height:3rem">
-                <ul class="tabs tabs-transparent right " id="myTab" role="tablist">
+                <ul class="tabs tabs-transparent right " id="indexTabs" role="tablist">
                     <li class="tab">
-                        <a class="active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+                        <a class="active" id="home-tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+                    </li>
+                    <li class="tab" id="canedar-tab-p">
+                        <a class="" id="calendar-tab"  href="#calendar" role="tab" aria-controls="calendar" aria-selected="false">Calendar</a>
                     </li>
                     <li class="tab">
-                        <a class="" id="calendar-tab" data-toggle="tab" href="#calendar" role="tab" aria-controls="calendar" aria-selected="false">Calendar</a>
-                    </li>
-                    <li class="tab">
-                        <a class="" id="docs-tab" data-toggle="tab" href="#docs" role="tab" aria-controls="contact" aria-selected="false">Docs</a>
+                        <a class="" id="docs-tab"  href="#docs" role="tab" aria-controls="contact" aria-selected="false">Docs</a>
                     </li>
                 </ul>
             </div>
@@ -39,15 +39,15 @@
         </main>
     </div>
 
-    <footer class="footer border-top" style="width:100vw">
-        <div class="container">
+    <footer class="footer border-top cyan darken-3 z-depth-3" style="width:100vw">
+        <div class="container white-text">
             &copy; 2021 - CalWebApi - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.js" type="text/javascript"></script>
-    <script src="~/lib/izimodal/js/iziModal.min.js"></script>
+    
     <script src="~/lib/materialize/js/materialize.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)

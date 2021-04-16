@@ -10,7 +10,13 @@ let Endpoints = {
     ScheduleSimpleTask: "/api/v1.1/Scheduler/SimpleTask"
 }
 
-
+let indexTabs, indexTabElems;
+$(() => {
+    InitElements()
+    indexTabElems = document.querySelector("#indexTabs");
+    indexTabs = M.Tabs.init(indexTabElems, { swipeable:true});
+    //$('label select').formSelect({ classes: 'row col s10' });
+})
 
 
 let taskTable = $("#task-dataTable").DataTable({
@@ -21,9 +27,10 @@ let taskTable = $("#task-dataTable").DataTable({
         { //NEW BTN
             text: "New",
             action: function (e, dt, node, config) {
-                $("#calendar-tab").trigger("click");
+                indexTabs.select("canedar-tab-p");
+                indexTabs.updateTabIndicator();
                 setTimeout(() => {
-                    $('#calendar-modal').iziModal('open');;
+                    modalInstance?.open();
                 }, 200);
                 
             },
@@ -297,11 +304,8 @@ const InitElements = () => {
 
 
 //On Page Load
-$(() => {
-    InitElements()
-    $('.tabs').tabs();
-    //$('label select').formSelect({ classes: 'row col s10' });
-})
+    
+
 
 
 

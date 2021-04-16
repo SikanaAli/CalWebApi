@@ -1,4 +1,6 @@
 ﻿
+let modalInstance;
+
 function selectDate(date) {
     $('#calendar').updateCalendarOptions({
         date: date
@@ -10,7 +12,7 @@ function onDoubleClick(date) {
     $('#calendar').updateCalendarOptions({
         date: date
     });
-    $('#calendar-modal').iziModal('open');
+    modalInstance.open();
     $("#cron-expression-desc").text(cronstrue.toString($("#cron-output").val()))
     console.log("Doublick done");
 }
@@ -28,17 +30,18 @@ $('.day').addClass('noselect');
 
 
 //Calender Modal
-$("#calendar-modal").iziModal({
-    title: "<strong>Schedule New Task</strong>",
-    padding: "2rem",
-    radius: 5,
-    width: "60%",
-    fullscreen: true,
-    theme: "light",
+$(() => {
+    let crontabs = M.Tabs.init(document.querySelectorAll(".cron-tabs"))
+    cronSelect = M.FormSelect.init(document.querySelectorAll('.cron-select'))
 
-    left: 0,
-    right: 0,
-
+    //$('.cron-tabs').tabs();
+    //$("#ScheduleTaskForm").find("select").formSelect();
+    //$("#ScheduleTaskForm").find("select").css("display","block")
+    let modal = document.querySelector("#calendar-modal");
+    let options = {
+        preventScrolling: false
+    }
+    modalInstance = M.Modal.init(modal,options)
 })
 
 
