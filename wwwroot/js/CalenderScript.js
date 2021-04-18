@@ -29,9 +29,21 @@ $('#calendar').calendar(defaultConfig);
 $('.day').addClass('noselect');
 
 
+//let crontabs = document.querySelectorAll(".cron-tabs")
+//let crontabsInstance;
+//crontabsInstance = M.Tabs.init(crontabs, {});
 //Calender Modal
 $(() => {
-    let crontabs = M.Tabs.init(document.querySelectorAll(".cron-tabs"))
+
+    $(".cron-tabs").tabs()
+    setTimeout(() => {
+        $(".cron-tabs").tabs("select", "minutely")
+    }, 100);
+    
+    
+
+    //crontabsInstance?.select("minutes-tab")
+
     cronSelect = M.FormSelect.init(document.querySelectorAll('.cron-select'))
 
     //$('.cron-tabs').tabs();
@@ -41,7 +53,9 @@ $(() => {
     let options = {
         preventScrolling: false
     }
-    modalInstance = M.Modal.init(modal,options)
+    modalInstance = M.Modal.init(modal, options)
+
+    console.log(modalInstance)
 })
 
 
@@ -82,8 +96,9 @@ var Validator = $("#ScheduleTaskForm").validate({
         }
 
         //Get Active Schedule
-        FormData.activeSchedule = $("#cron-schedule-tabs [data-toggle=tab].active").attr("href")
+        FormData.activeSchedule = $("#cron-schedule-tabs [role=tab].active").attr("href")
 
+        
         switch (FormData?.activeSchedule) {
             case "#minutely":
 

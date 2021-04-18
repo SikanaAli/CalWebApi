@@ -240,6 +240,7 @@ div.material-table table th.sorting_desc:after {
 
 tbody .selected {
     background: #26a69a;
+    color:#fff
 }
 
 label{

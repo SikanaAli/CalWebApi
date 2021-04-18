@@ -66,23 +66,23 @@
                 <div class="">
                     <div class="section">
                         <ul class="tabs cron-tabs tabs-fixed-width black-text text-accent-1 grey lighten-3 center" id="cron-schedule-tabs" style="width:100%; height:4rem">
-                            <li class="tab col">
-                                <a class="active" id="minutes-tab" href="#minutely" role="tab" aria-controls="minutes" aria-selected="false">Minutes</a>
+                            <li class="tab col" id="minute-tab-parent">
+                                <a class="" id="minutes-tab" href="#minutely" role="tab" aria-controls="minutes" aria-selected="false">Minutes</a>
                             </li>
                             <li class="tab col">
-                                <a  id="hourly-tab" href="#hourly" role="tab" aria-controls="hourly" aria-selected="false">Hourly</a>
+                                <a class=""  id="hourly-tab" href="#hourly" role="tab" aria-controls="hourly" aria-selected="false">Hourly</a>
                             </li>
                             <li class="tab col">
-                                <a  id="daily-tab" href="#daily" role="tab" aria-controls="daily" aria-selected="false">Daily</a>
+                                <a class=""  id="daily-tab" href="#daily" role="tab" aria-controls="daily" aria-selected="false">Daily</a>
                             </li>
                             <li class="tab col">
-                                <a  id="weekly-tab" href="#weekly" role="tab" aria-controls="weekly" aria-selected="false">Weekly</a>
+                                <a class=""  id="weekly-tab" href="#weekly" role="tab" aria-controls="weekly" aria-selected="false">Weekly</a>
                             </li>
                             <li class="tab col">
-                                <a  id="monthly-tab" href="#monthly" role="tab" aria-controls="monthly" aria-selected="false">Monthly</a>
+                                <a class="" id="monthly-tab" href="#monthly" role="tab" aria-controls="monthly" aria-selected="false">Monthly</a>
                             </li>
                             <li class="tab col">
-                                <a  id="yearly-tab" href="#yearly" role="tab" aria-controls="yearly" aria-selected="false">Yearly</a>
+                                <a class="" id="yearly-tab" href="#yearly" role="tab" aria-controls="yearly" aria-selected="false">Yearly</a>
                             </li>
 
                             <li class="tab col">
@@ -92,18 +92,20 @@
                     </div>
                     <div class="tab-content" id="myTabContent">
                         <!--Tab Minutes-->
-                        <div class="tab-pane fade show active" id="minutely" role="tabpanel" aria-labelledby="minutes-tab">
-                            <div class="row p-3 ">
+                        <div class="tab-pane fade show active " id="minutely" role="tabpanel" aria-labelledby="minutes-tab">
+                            <div class="row p-3 valign-wrapper">
                                 
-                                    <label class="">Every</label>
-                                    <select class="short-w cron-select" id="cron-every-minutely" name="cronEveryMinutes">
-                                        @{
-                                            for (int i = 1; i < 60; i++)
-                                            {
-                                                <option value="@i">@i</option>
+                                    <label class="prefix">Every</label>
+                                    <div class="short-w " style="padding-left:1rem">
+                                        <select class=" cron-select" id="cron-every-minutely" name="cronEveryMinutes">
+                                            @{
+                                                for (int i = 1; i < 60; i++)
+                                                {
+                                                    <option value="@i">@i</option>
+                                                }
                                             }
-                                        }
-                                    </select>
+                                        </select>
+                                    </div>
                                 
                             </div>
                         </div>
@@ -113,15 +115,14 @@
                             <div class=" p-3">
                                 <div class="row ">
                                     <div class="valign-wrapper" >
-                                        <div class="col s2" style="margin-left:0">
-                                            <label class="hourly-every-1 " for="hourly-every-1">
+                                        
+                                            <label class="hourly-every-1 prefix" for="hourly-every-1">
                                                 <input class="with-gap hourly-radio" type="radio" name="hourly-every" id="hourly-every-1" value="option1">
                                                 <span>
                                                     Every
                                                 </span>
                                             </label>
-                                        </div>
-                                        <div class="col s4" style="margin-left:0">
+                                        <div class="short-w" style="padding-left:1rem">
                                             <select class="cron-select col s4" id="hourly-every-interval" name="cronHourly">
                                                 @{
 
@@ -137,15 +138,15 @@
                                 </div>
                                 <div class="form-inline mt-3">
                                     <div class="form-check form-check-inline">
-                                        <div class="row">
-                                            <div class="valign-wrapper">
-                                                <div class="col s3">
-                                                    <label class="form-check-label" for="hourly-every-2">
-                                                        <input class="form-check-input hourly-radio" type="radio" name="hourly-every" id="hourly-every-2" value="option2">
-                                                        <span>Start at</span>
-                                                    </label>
-                                                </div>
-                                                <div col s2>
+                                        <div class="row valign-wrapper">
+                                            
+                                                
+                                                <label class="prefix" for="hourly-every-2" style="padding-right:1rem">
+                                                    <input class="form-check-input hourly-radio" type="radio" name="hourly-every" id="hourly-every-2" value="option2">
+                                                    <span>Start at</span>
+                                                </label>
+                                                
+                                                <div class="short-w">
                                                     <select class="cron-select" id="hourly-every-start-at" name="HourlyStartAt">
                                                         @{
                                                             string tempval = "";
@@ -164,8 +165,8 @@
                                                         }
                                                     </select>
                                                 </div>
-                                                <span>:</span>
-                                                <div class="col s2 ">
+                                                <span style="padding:0 1rem 0 1rem"> :</span>
+                                                <div class="short-w">
                                                     <select class="cron-select" id="hourly-every-start-at-2">
                                                         @{
                                                             string tempval2 = "";
@@ -184,7 +185,7 @@
                                                         }
                                                     </select>
                                                 </div>
-                                            </div>
+                                            
                                         </div>
                                         
                                     </div>
@@ -618,13 +619,15 @@
             <div>
                 <div>
                     <label>Callback</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <select class="form-control" id="cron-callback-type" name="cron-callback-type">
+                    <div class="valign-wrapper">
+                        <div class="prefix short-w">
+                            <select class="cron-select" id="cron-callback-type" name="cron-callback-type">
                                 <option value="URL">URL</option>
                             </select>
                         </div>
-                        <input type="text" class="form-control" id="cron-callback" name="cron-callback" placeholder="http://mysite.com/api/someting/to/do" aria-describedby="callbackprepend" required>
+                        
+                            <input type="text" class="form-control" id="cron-callback" name="cron-callback" placeholder="http://mysite.com/api/someting/to/do" aria-describedby="callbackprepend" required>
+                        
                     </div>
                 </div>
                 <div class="mt-2">
