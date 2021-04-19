@@ -364,7 +364,13 @@ namespace CalWebApi.Controllers
                     }
                     else
                     {
-                        Console.WriteLine("Start @"+task.ScheduleData["startat"].ToString());
+                        int[] StartAtTime = task.ScheduleData["startat"].ToString().Split(':');
+
+                        simpleTrigger = TriggerBuilder.Create()
+                             .WithIdentity(task.Id.ToString())
+                             .WithDescription(task.TaskName)
+                             .StartAt(new DateTimeOffset(new TimeSpan(StartAtTime[0],StartAtTime[1],0)))
+                             .Build();
                     }
                     
 
