@@ -21,10 +21,10 @@ namespace CalWebApi.Scheduler
 
         public Task Execute(IJobExecutionContext context)
         {
-            ScheduleTask data = new ScheduleTask();
+            ScheduleTaskAdvanced data = new ScheduleTaskAdvanced();
             if (context.JobDetail.JobDataMap.GetString("type") != "simple")
             {
-                data = JsonConvert.DeserializeObject<ScheduleTask>(context.JobDetail.JobDataMap.GetString("data"));
+                data = JsonConvert.DeserializeObject<ScheduleTaskAdvanced>(context.JobDetail.JobDataMap.GetString("data"));
             }
             else
             {

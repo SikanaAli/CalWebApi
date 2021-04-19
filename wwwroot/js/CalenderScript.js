@@ -36,9 +36,6 @@ $('.day').addClass('noselect');
 $(() => {
 
     $(".cron-tabs").tabs()
-    setTimeout(() => {
-        $(".cron-tabs").tabs("select", "minutely")
-    }, 100);
     
     
 
@@ -52,6 +49,7 @@ $(() => {
     let modal = document.querySelector("#calendar-modal");
     let options = {
         preventScrolling: false
+
     }
     modalInstance = M.Modal.init(modal, options)
 

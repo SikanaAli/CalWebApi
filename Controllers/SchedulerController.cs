@@ -50,29 +50,17 @@ namespace CalWebApi.Controllers
 
             if (!this.ModelState.IsValid)
                 return BadRequest(modelState: ModelState);
+
             task.Id = Guid.NewGuid();
-            switch (task.ScheduleRecurrence)
-            {
-                case RecurrenceType.Minutes:
 
-                    var simpleJob = JobBuilder.Create(jobType: typeof(TaskJob))
-                    .WithIdentity(task.Id.ToString())
-                    .WithDescription(task.Description)
-                    .UsingJobData("type", "simple")
-                    .UsingJobData("data", JObject.FromObject(task).ToString())
-                    .StoreDurably(durability: true)
-                    .Build();
+            IJobDetail simpleJob = CreateSimpleJob(task);
+            ITrigger simpleTrigger = CreateSimpleTrigger(task);
 
-                    var simpleTrigger = CreateSimpleTrigger(task);
+            //await scheduler.ScheduleJob(simpleJob, simpleTrigger);
 
-                    await scheduler.ScheduleJob(simpleJob, simpleTrigger);
-                    break;
-                default:
-                    break;
-            }
             Console.WriteLine(JsonConvert.SerializeObject(task));
-            Console.WriteLine(task.ScheduleData["every"].ToString());
-            return Ok();
+            
+            return Ok("Task Scheduled");
         }
 
         /// <summary>
@@ -101,7 +89,7 @@ namespace CalWebApi.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [SwaggerRequestExample(typeof(JObject),typeof(ScheduleTaskExample))]
-        public async Task<IActionResult> ScheduleTask([FromBody]ScheduleTask task)
+        public async Task<IActionResult> ScheduleTask([FromBody]ScheduleTaskAdvanced task)
         {
             if (ModelState.IsValid)
             {
@@ -112,7 +100,7 @@ namespace CalWebApi.Controllers
                         //await scheduler.Start();
                         
                         var metadata = new TaskMetadata(Guid.NewGuid(), typeof(TaskJob),task.TaskName, task.CronExpression);
-                        var Job = CreateJob(metadata,task);
+                        var Job = CreateAdvancedJob(metadata,task);
                         var trigger = CreateTrigger(metadata);
 
                         
@@ -307,7 +295,8 @@ namespace CalWebApi.Controllers
             .Build();
         }
 
-        private IJobDetail CreateJob(TaskMetadata jobMetadata, ScheduleTask task)
+
+        private IJobDetail CreateAdvancedJob(TaskMetadata jobMetadata, ScheduleTaskAdvanced task)
         {
             return JobBuilder
             .Create(jobMetadata.TaskType)
@@ -319,6 +308,17 @@ namespace CalWebApi.Controllers
             .Build();
         }
 
+        private IJobDetail CreateSimpleJob(SimpleTask task)
+        {
+            return JobBuilder
+                .Create(jobType: typeof(TaskJob))
+                .StoreDurably(durability: true)
+                .WithIdentity(task.Id.ToString())
+                .WithDescription(task.Description)
+                .UsingJobData("type","simple")
+                .UsingJobData("data",JObject.FromObject(task).ToString())
+                .Build();
+        }
         
 
         private ITrigger CreateTriggerForJob(TaskMetadata jobMetadata, IJobDetail detailForJob)
@@ -347,14 +347,26 @@ namespace CalWebApi.Controllers
                         .Build();
                     break;
                 case RecurrenceType.Hourly:
-                    //simpleTrigger = TriggerBuilder.Create()
-                    //    .WithIdentity(task.Id.ToString())
-                    //    .WithDescription(task.TaskName)
-                    //    .WithSimpleSchedule(s =>
-                    //    {
-                    //        s.WithIntervalInHours()
-                    //    })
-                    //    .Build();
+
+                    //JObject tempData = JObject.Parse(task.ScheduleData.ToString());
+
+                    if (task.ScheduleData.ContainsKey("every"))
+                    {
+                        
+                        simpleTrigger = TriggerBuilder.Create()
+                            .WithIdentity(task.Id.ToString())
+                            .WithDescription(task.TaskName)
+                            .WithSimpleSchedule(s =>
+                            {
+                                s.WithIntervalInHours(int.Parse(task.ScheduleData["every"].ToString()));
+                            })
+                            .Build();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Start @"+task.ScheduleData["startat"].ToString());
+                    }
+                    
 
 
                     break;

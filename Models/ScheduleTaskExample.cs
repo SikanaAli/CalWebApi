@@ -7,7 +7,7 @@ namespace CalWebApi.Models
 {
     public class ScheduleTaskExample
     {
-        public ScheduleTask ScheduleTask { get; set; } = new ScheduleTask
+        public ScheduleTaskAdvanced ScheduleTask { get; set; } = new ScheduleTaskAdvanced
         {
             CallBackUrl = "http://mysite.com/",
             TaskName = "Do Somthing",

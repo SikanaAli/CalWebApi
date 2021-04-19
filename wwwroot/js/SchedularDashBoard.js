@@ -14,7 +14,7 @@ let indexTabs, indexTabElems;
 $(() => {
     InitElements()
     indexTabElems = document.querySelector("#indexTabs");
-    indexTabs = M.Tabs.init(indexTabElems, { swipeable:true});
+    indexTabs = M.Tabs.init(indexTabElems, { swipeable:false});
     //$('label select').formSelect({ classes: 'row col s10' });
 })
 
@@ -31,6 +31,7 @@ let taskTable = $("#task-dataTable").DataTable({
                 indexTabs.updateTabIndicator();
                 setTimeout(() => {
                     modalInstance?.open();
+                    $('.cron-tabs').tabs("select", "minutely");
                 }, 200);
                 
             },
@@ -293,8 +294,7 @@ let taskTable = $("#task-dataTable").DataTable({
     ],
 });
 
-//taskTable.buttons().container()
-//    .appendTo($('#task-dataTable_length', taskTable.table().container()));
+
 
 const InitElements = () => {
     nextRefreshEle.text("The Table is Refreshed every 6 sec")
