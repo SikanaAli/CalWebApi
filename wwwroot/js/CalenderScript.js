@@ -37,7 +37,7 @@ $(() => {
 
     $(".cron-tabs").tabs()
     
-    
+   
 
     //crontabsInstance?.select("minutes-tab")
 
@@ -118,7 +118,7 @@ var Validator = $("#ScheduleTaskForm").validate({
                     }
                 } else if ($("[name=hourly-every]:checked").val().toString() === "option2") {
                     temp = {
-                        "startat": `${$("#hourly-every-interval").val().toString().trim()}:${$("#hourly-every-start-at-2").val().toString().trim()}`
+                        "startat": `${$("#hourly-every-start-at").val().toString().trim()}:${$("#hourly-every-start-at-2").val().toString().trim()}`
                     }
                 }
 

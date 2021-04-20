@@ -53,12 +53,38 @@ namespace CalWebApi.Controllers
 
             task.Id = Guid.NewGuid();
 
+            switch (task.ScheduleRecurrence)
+            {
+                case RecurrenceType.Minutes:
+                    if (!isValidScheduleData(task))
+                    {
+                        return BadRequest("Invalid Minute Value");
+                    }
+                    break;
+                case RecurrenceType.Hourly:
+                    if (!isValidScheduleData(task))
+                    {
+                        
+                        
+                        return BadRequest("Invalid Start At/Hourly value");
+                    }
+                    break;
+                case RecurrenceType.Daily:
+                    break;
+                case RecurrenceType.Weekly:
+                    break;
+                case RecurrenceType.Monthly:
+                    break;
+                case RecurrenceType.Yearly:
+                    break;
+                default:
+                    break;
+            }
+
             IJobDetail simpleJob = CreateSimpleJob(task);
             ITrigger simpleTrigger = CreateSimpleTrigger(task);
 
-            //await scheduler.ScheduleJob(simpleJob, simpleTrigger);
-
-            Console.WriteLine(JsonConvert.SerializeObject(task));
+            await scheduler.ScheduleJob(simpleJob, simpleTrigger);
             
             return Ok("Task Scheduled");
         }
@@ -331,6 +357,9 @@ namespace CalWebApi.Controllers
             .Build();
         }
 
+
+        
+
         private ITrigger CreateSimpleTrigger(SimpleTask task)
         {
             ITrigger simpleTrigger = null;
@@ -364,12 +393,19 @@ namespace CalWebApi.Controllers
                     }
                     else
                     {
-                        int[] StartAtTime = task.ScheduleData["startat"].ToString().Split(':');
+
+
+                        string startAtHourVal = task.ScheduleData["startat"].ToString();
+                        DateTime tempNow = DateTime.Now;
+                        DateTime finalStartAt = DateTime.Parse($"{tempNow.Day}-{tempNow.Month}-{tempNow.Year} {startAtHourVal}:00");
 
                         simpleTrigger = TriggerBuilder.Create()
                              .WithIdentity(task.Id.ToString())
                              .WithDescription(task.TaskName)
-                             .StartAt(new DateTimeOffset(new TimeSpan(StartAtTime[0],StartAtTime[1],0)))
+                             .WithSimpleSchedule(s=> {
+                                 s.WithRepeatCount(0);
+                             })
+                             .StartAt(finalStartAt)
                              .Build();
                     }
                     
@@ -390,6 +426,54 @@ namespace CalWebApi.Controllers
 
             return simpleTrigger;
         }
+
+        private bool isValidScheduleData(SimpleTask task)
+        {
+            switch (task.ScheduleRecurrence)
+            {
+                case RecurrenceType.Minutes:
+                    int minuteVal = int.Parse(task.ScheduleData["every"].ToString());
+
+                    if ((minuteVal < 60) && (minuteVal > 0))
+                        return true;
+                    return false;
+
+                case RecurrenceType.Hourly:
+
+                    if (task.ScheduleData.ContainsKey("every"))
+                    {
+                        int hourVal = int.Parse(task.ScheduleData["every"].ToString());
+
+                        if ((hourVal < 25) && (hourVal > 0))
+                            return true;
+                        return false;
+                    }
+
+                    string startAtHourVal = task.ScheduleData["startat"].ToString();
+
+                    Console.WriteLine("VAL => " + startAtHourVal);
+                    DateTime tempNow = DateTime.Now;
+                    DateTime toEval = DateTime.Parse($"{tempNow.Day}-{tempNow.Month}-{tempNow.Year} {startAtHourVal}:00");
+                    if ( toEval> DateTime.Now)
+                    {
+                        Console.WriteLine(toEval);
+                        return true;
+                    }
+                    return false;
+
+                //case RecurrenceType.Daily:
+                //    break;
+                //case RecurrenceType.Weekly:
+                //    break;
+                //case RecurrenceType.Monthly:
+                //    break;
+                //case RecurrenceType.Yearly:
+                //    break;
+                default:
+                    return false;
+            }
+        }
+
         //Check if Jobkey Matched Job
         private async Task<bool> CheckIfKeyExists(string taskid)
         {
@@ -440,19 +524,26 @@ namespace CalWebApi.Controllers
                         if (state == TriggerState.Paused)
                             rowClass = "paused";
 
-
-                        
-                        _scheduledTasks.Add(new ScheduledTasks
+                        try
                         {
-                            DT_RowId = trigger.Key.Name,
-                            DT_RowClass = rowClass,
-                            Group = group,
-                            TaskName = trigger.Description,
-                            Discription = jdetail.Description,
-                            NextFireTime = trigger.GetNextFireTimeUtc().Value.DateTime.ToLocalTime().ToString("HH:mm:ss dd-MMM-yyyy").ToUpper(),
-                            PreviousFireTime = trigger.GetPreviousFireTimeUtc().Value.DateTime.ToLocalTime().ToString("HH:mm:ss dd-MMM-yyyy").ToUpper()
+                            _scheduledTasks.Add(new ScheduledTasks
+                            {
+                                DT_RowId = trigger.Key.Name,
+                                DT_RowClass = rowClass,
+                                Group = group,
+                                TaskName = trigger.Description,
+                                Discription = jdetail.Description,
+                                NextFireTime = trigger.GetNextFireTimeUtc().Value.DateTime.ToLocalTime().ToString("HH:mm:ss dd-MMM-yyyy").ToUpper(),
+                                PreviousFireTime = trigger.GetPreviousFireTimeUtc().Value.DateTime.ToLocalTime().ToString("HH:mm:ss dd-MMM-yyyy").ToUpper()
+                            });
+                        }
+                        catch (Exception)
+                        {
 
-                        });
+                            throw;
+                        }
+
+
                     }
                 }
             }
