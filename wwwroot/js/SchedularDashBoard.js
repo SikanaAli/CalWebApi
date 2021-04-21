@@ -29,10 +29,7 @@ let taskTable = $("#task-dataTable").DataTable({
             action: function (e, dt, node, config) {
                 indexTabs.select("canedar-tab-p");
                 indexTabs.updateTabIndicator();
-                setTimeout(() => {
                     modalInstance?.open();
-                    $('.cron-tabs').tabs("select", "minutely");
-                }, 200);
                 
             },
             className: "blue"

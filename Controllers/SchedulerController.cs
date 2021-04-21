@@ -84,6 +84,13 @@ namespace CalWebApi.Controllers
             IJobDetail simpleJob = CreateSimpleJob(task);
             ITrigger simpleTrigger = CreateSimpleTrigger(task);
 
+            if(task.ScheduleRecurrence  == RecurrenceType.Hourly && task.ScheduleData.ContainsKey("startat"))
+            {
+                await scheduler.ScheduleJob(simpleJob, (ISimpleTrigger)simpleTrigger);
+                return Ok("Task Scheduled");
+            }
+
+
             await scheduler.ScheduleJob(simpleJob, simpleTrigger);
             
             return Ok("Task Scheduled");
@@ -402,9 +409,6 @@ namespace CalWebApi.Controllers
                         simpleTrigger = TriggerBuilder.Create()
                              .WithIdentity(task.Id.ToString())
                              .WithDescription(task.TaskName)
-                             .WithSimpleSchedule(s=> {
-                                 s.WithRepeatCount(0);
-                             })
                              .StartAt(finalStartAt)
                              .Build();
                     }
@@ -524,24 +528,16 @@ namespace CalWebApi.Controllers
                         if (state == TriggerState.Paused)
                             rowClass = "paused";
 
-                        try
+                        _scheduledTasks.Add(new ScheduledTasks
                         {
-                            _scheduledTasks.Add(new ScheduledTasks
-                            {
-                                DT_RowId = trigger.Key.Name,
-                                DT_RowClass = rowClass,
-                                Group = group,
-                                TaskName = trigger.Description,
-                                Discription = jdetail.Description,
-                                NextFireTime = trigger.GetNextFireTimeUtc().Value.DateTime.ToLocalTime().ToString("HH:mm:ss dd-MMM-yyyy").ToUpper(),
-                                PreviousFireTime = trigger.GetPreviousFireTimeUtc().Value.DateTime.ToLocalTime().ToString("HH:mm:ss dd-MMM-yyyy").ToUpper()
-                            });
-                        }
-                        catch (Exception)
-                        {
-
-                            throw;
-                        }
+                            DT_RowId = trigger.Key.Name,
+                            DT_RowClass = rowClass,
+                            Group = group,
+                            TaskName = trigger.Description,
+                            Discription = jdetail.Description,
+                            NextFireTime = trigger.GetNextFireTimeUtc().HasValue ? trigger.GetNextFireTimeUtc().Value.DateTime.ToLocalTime().ToString("HH:mm:ss dd-MMM-yyyy").ToUpper() : "N/A",
+                            PreviousFireTime = trigger.GetPreviousFireTimeUtc().HasValue ? trigger.GetPreviousFireTimeUtc().Value.DateTime.ToLocalTime().ToString("HH:mm:ss dd-MMM-yyyy").ToUpper() : "N/A"
+                        });
 
 
                     }

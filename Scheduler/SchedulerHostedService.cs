@@ -20,7 +20,7 @@ namespace CalWebApi.Scheduler
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            await _scheduler?.Start(cancellationToken);
+                await _scheduler?.Start(cancellationToken);
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
