@@ -53,8 +53,10 @@
    Calendar Modal
 -->
 <div id="calendar-modal" class="modal modal-fixed-footer">
-    <div class="modal-content">
+    <div class="modal-header">
         <h4>Schedule Task</h4>
+    </div>
+    <div class="modal-content" style="margin-top:57px">
         <form id="ScheduleTaskForm">
             <div class="form-group">
                 <label for="cron-task-name">Task Name</label>
@@ -199,25 +201,25 @@
                         <div class="tab-pane fade" id="daily" role="tabpanel" aria-labelledby="daily-tab">
                             <div class="">
                                 <div class="form-check-inline">
-                                    
                                     <label class="form-check-label" for="daily-lable-one">
-                                        <input class="form-check-input" type="radio" name="dailyLable" id="daily-lable-one" value="everyday">
+                                        <input class="form-check-input" type="radio" name="cronDaily" id="daily-lable-one" value="everyday" checked="checked">
                                         <span>Everyday</span>
                                     </label>
                                 </div>
-                                <div class="form-inline mt-2">
+                                <div class="mt-2">
                                     
                                     <label class="form-check-label" for="daily-lable-two">
-                                        <input class="form-check-input" type="radio" name="dailyLable" id="daily-lable-two" value="weekday">
+                                        <input class="form-check-input" type="radio" name="cronDaily" id="daily-lable-two" value="weekday">
                                         <span>Every Weekday</span>
                                     </label>
                                 </div>
                                 <div class="valign-wrapper">
                                     <label class="form-check-label" style="padding-right:1rem">Start At</label>
                                     <div class="short-w">
-                                        <select class="cron-select" id="cron-dailyHour-start" name="dailyStartAtHours">
+                                        <select class="cron-select" id="cron-dailyHour-startat" name="dailyStartAtHours">
                                             @{
                                                 string tempvaldaily = "";
+                                                
                                                 for (int i = 0; i < 24; i++)
                                                 {
                                                     if (i < 10)
@@ -228,14 +230,20 @@
                                                     {
                                                         tempvaldaily = i.ToString();
                                                     }
-                                                    <option value="@tempvaldaily ">@tempvaldaily</option>
+                                                    if (@tempvaldaily == "12")
+                                                    {
+                                                        <option value="@tempvaldaily" selected="selected">@tempvaldaily</option>
+                                                        continue;
+                                                    }
+
+                                                    <option value="@tempvaldaily" >@tempvaldaily</option>
                                                 }
                                             }
                                         </select>
                                     </div>
                                     <span style="padding:0 1rem 0 1rem"> : </span>
                                     <div class="short-w">
-                                        <select class="cron-select" name="dailyStartAtMinutes">
+                                        <select class="cron-select" id="cron-dailyMinutes-startat" name="dailyStartAtMinutes">
                                             @{
                                                 string tempvaldaily2 = "";
                                                 for (int i = 0; i < 60; i++)
@@ -626,16 +634,14 @@
 
             <div>
                 <div>
-                    <label>Callback</label>
+                    <label for="cron-callback">Callback</label>
                     <div class="valign-wrapper">
                         <div class="prefix short-w">
                             <select class="cron-select" id="cron-callback-type" name="cron-callback-type">
                                 <option value="URL">URL</option>
                             </select>
                         </div>
-                        
-                            <input type="text" class="form-control" id="cron-callback" name="cron-callback" placeholder="http://mysite.com/api/someting/to/do" aria-describedby="callbackprepend" required>
-                        
+                        <input type="text" class="form-control" id="cron-callback" name="cron-callback" placeholder="http://mysite.com/api/someting/to/do" aria-describedby="callbackprepend" required>
                     </div>
                 </div>
                 <div class="mt-2">
@@ -644,13 +650,11 @@
                 </div>
 
             </div>
-            <div class="w-100 d-flex justify-content-center pt-3">
-                <button type="submit" class="btn btn-primary align-self-center" id="SubmitTask">Submit <i class="far fa-paper-plane"></i></button>
-            </div>
+            
         </form>
     </div>
     <div class="modal-footer">
-        <a href="#" class="modal-close waves-effect waves-green btn-flat">Add</a>
+        <button type="submit" form="ScheduleTaskForm" class="waves-effect waves-green btn cyan darken-3 valign-wrapper" id="SubmitTask" ><i class="material-icons right">send</i>Add</button>
     </div>
 </div>
 

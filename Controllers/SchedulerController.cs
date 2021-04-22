@@ -64,12 +64,14 @@ namespace CalWebApi.Controllers
                 case RecurrenceType.Hourly:
                     if (!isValidScheduleData(task))
                     {
-                        
-                        
                         return BadRequest("Invalid Start At/Hourly value");
                     }
                     break;
                 case RecurrenceType.Daily:
+                    if (!isValidScheduleData(task))
+                    {
+                        return BadRequest("Internal Server Error");
+                    }
                     break;
                 case RecurrenceType.Weekly:
                     break;
@@ -400,8 +402,6 @@ namespace CalWebApi.Controllers
                     }
                     else
                     {
-
-
                         string startAtHourVal = task.ScheduleData["startat"].ToString();
                         DateTime tempNow = DateTime.Now;
                         DateTime finalStartAt = DateTime.Parse($"{tempNow.Day}-{tempNow.Month}-{tempNow.Year} {startAtHourVal}:00");
@@ -412,11 +412,34 @@ namespace CalWebApi.Controllers
                              .StartAt(finalStartAt)
                              .Build();
                     }
-                    
-
 
                     break;
                 case RecurrenceType.Daily:
+
+                    simpleTrigger = TriggerBuilder.Create()
+                        .WithIdentity(task.Id.ToString())
+                        .WithDescription(task.TaskName)
+                        .WithDailyTimeIntervalSchedule(s =>
+                        {
+                            s.WithIntervalInHours(24);
+                            if (task.ScheduleData.ContainsKey("recurance"))
+                            {
+                                string[] startat = task.ScheduleData["startat"].ToString().Split(":");
+                                if (task.ScheduleData["recurance"].ToString().ToLower() == "every")
+                                {
+                                    s.OnEveryDay();
+                                    
+                                    s.StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(int.Parse(startat[0]), int.Parse(startat[1])));
+                                }
+                                else
+                                {
+                                    s.OnMondayThroughFriday();
+                                    
+                                    s.StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(int.Parse(startat[0]), int.Parse(startat[1])));
+                                }
+                            }
+                        })
+                        .Build();
                     break;
                 case RecurrenceType.Weekly:
                     break;
@@ -465,8 +488,9 @@ namespace CalWebApi.Controllers
                     }
                     return false;
 
-                //case RecurrenceType.Daily:
-                //    break;
+                case RecurrenceType.Daily:
+                    return true;
+                    break;
                 //case RecurrenceType.Weekly:
                 //    break;
                 //case RecurrenceType.Monthly:

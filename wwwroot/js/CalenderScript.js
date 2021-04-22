@@ -129,8 +129,22 @@ var Validator = $("#ScheduleTaskForm").validate({
                 }
                 console.log(FormData)
                 break;
+            case "#daily":
+                var temp = {
+                    recurance: $("[name=cronDaily]:checked").val().toString().trim(),
+                    startat: `${$("#cron-dailyHour-startat").val().trim()}:${$("#cron-dailyMinutes-startat").val().trim()}`
+                }
+                FormData = {
+                    ...FormData,
+                    ScheduleRecurrence: "Daily",
+                    ScheduleData: { ...temp }
+                }
+
+                break;
             default:
         }
+
+        console.dir(FormData)
         
         $.ajax({
             url: "/api/v1.1/Scheduler/SimpleTask",
