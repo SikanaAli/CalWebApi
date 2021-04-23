@@ -490,7 +490,7 @@ namespace CalWebApi.Controllers
 
                 case RecurrenceType.Daily:
                     return true;
-                    break;
+                   
                 //case RecurrenceType.Weekly:
                 //    break;
                 //case RecurrenceType.Monthly:

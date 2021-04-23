@@ -47,9 +47,12 @@ $(() => {
     //$("#ScheduleTaskForm").find("select").formSelect();
     //$("#ScheduleTaskForm").find("select").css("display","block")
     let modal = document.querySelector("#calendar-modal");
-    let options = {
-        preventScrolling: false,
-        onOpenEnd : $('.cron-tabs').tabs("select", "minutely")
+    var options = {
+       
+        onOpenEnd: function (e) {
+            $('.cron-tabs').tabs("select", "minutely")
+            console.log("Minutes Selected")
+        }
     }
     modalInstance = M.Modal.init(modal, options)
 

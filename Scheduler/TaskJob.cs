@@ -44,7 +44,7 @@ namespace CalWebApi.Scheduler
                 WebResponse response = request.GetResponse();
                 var responseCode = ((HttpWebResponse)response).StatusDescription;
                 response.Close();
-                Console.WriteLine($"Task Executed @ {DateTime.Now} with Response {responseCode}");
+                Console.WriteLine($"Task Executed @ {DateTime.Now} with Response {responseCode} {data.TaskName}");
             }
             catch (Exception e)
             {

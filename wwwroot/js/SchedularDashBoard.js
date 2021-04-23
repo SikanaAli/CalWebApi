@@ -20,7 +20,7 @@ $(() => {
 
 
 let taskTable = $("#task-dataTable").DataTable({
-    dom: "<'row '<'col s12 m3'l><'col s12 m5 center'B><'col s12 m4'f>>" +
+    dom: "<'row '<'col s12 m3'l><'col s12 m5 center'B><'col s12 m4 'f>>" +
         "<'col s12't>" +
         "<'row center'<'col s12 m12'p>>",
     buttons: [
