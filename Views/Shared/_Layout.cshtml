@@ -9,41 +9,68 @@
 
     <link rel="stylesheet" href="~/css/QuartzDashboard.css" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Antonio' rel='stylesheet'>
     @RenderSection("Styles", required: false)
 </head>
 <body>
-  
-            <div class="col s12 cyan darken-1 z-depth-1 center " style="width:100vw!important;height:3rem">
-                <ul class="tabs tabs-transparent right" id="indexTabs" role="tablist">
-                    <li class="tab">
-                        <a class="active white-text" id="home-tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
-                    </li>
-                    <li class="tab" id="canedar-tab-p">
-                        <a class="white-text" id="calendar-tab"  href="#calendar" role="tab" aria-controls="calendar" aria-selected="false">Calendar</a>
-                    </li>
-                    <li class="tab">
-                        <a class="white-text" id="docs-tab"  href="#docs" role="tab" aria-controls="contact" aria-selected="false">Docs</a>
-                    </li>
-                </ul>
-            </div>
-        
-    
-    <div class="container" style="margin-top:2rem; padding-bottom:70px; max-height:70vh">
-        <main role="main" class="row z-depth-1" style="padding:1rem; max-height:70vh;" >
+    <nav class="cyan darken-1">
+        <div class="nav-wrapper container-fluid valign-wrapper">
+            <a href="#" class="brand-logo anton">Scheduler</a>
+            <a href="#" data-target="slide-out" class="button-collapse show-on-large sidenav-trigger"><i class="nav-icon-size material-icons left">menu</i></a>
 
+        </div>
+    </nav>
+
+    <ul id="slide-out" class="sidenav cyan darken-4">
+        <li>
+            
+            <div class="user-view">
+                <div class="background">
+                    <img src="/images/indexblackred.jpg">
+                </div>
+                <div class="sidenav-logo">
+                    <i class="material-icons large white-text">event</i>
+                </div>
+                <a href="#email"><span class="white-text text-center">CMSB Scheduler</span></a>
+            </div>
+        </li>
+        <li class="bold cyan lighten-4"><a href="#!" class="waves-effect waves-teal"><i class="material-icons white-text">table</i>Sheduler</a></li>
+        <li class="bold cyan lighten-4"><a href="#!" class="waves-effect waves-teal"><i class="material-icons white-text">event</i>Calendar</a></li>
+        <li class="bold cyan lighten-4"><a href="#!" class="waves-effect waves-teal"><i class="material-icons white-text">description</i>Sheduler</a></li>
+        
+        
+    </ul>
+    <div class="col s12 cyan darken-1 z-depth-1 center " style="width:100vw!important;height:3rem; display:none">
+        <ul class="tabs tabs-transparent right" id="indexTabs" role="tablist">
+            <li class="tab">
+                <a class="active white-text" id="home-tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+            </li>
+            <li class="tab" id="canedar-tab-p">
+                <a class="white-text" id="calendar-tab" href="#calendar" role="tab" aria-controls="calendar" aria-selected="false">Calendar</a>
+            </li>
+            <li class="tab">
+                <a class="white-text" id="docs-tab" href="#docs" role="tab" aria-controls="contact" aria-selected="false">Docs</a>
+            </li>
+        </ul>
+    </div>
+
+
+    <div class="container" style="margin-top:2rem; padding-bottom:70px; max-height:70vh">
+        <main role="main" class="row z-depth-1" style="padding:1rem; max-height:70vh;">
             @RenderBody()
         </main>
+
     </div>
 
     <footer class="footer border-top cyan darken-3 z-depth-3" style="width:100vw">
         <div class="container white-text">
-            &copy; 2021 - CMSB IoT Scheduler 
+            &copy; 2021 - CMSB IoT Scheduler
         </div>
     </footer>
-    
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.js" type="text/javascript"></script>
-    
+
     <script src="~/lib/materialize/js/materialize.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)

@@ -14,7 +14,9 @@ let indexTabs, indexTabElems;
 $(() => {
     InitElements()
     indexTabElems = document.querySelector("#indexTabs");
-    indexTabs = M.Tabs.init(indexTabElems, { swipeable:false});
+    indexTabs = M.Tabs.init(indexTabElems, { swipeable: false });
+
+    $('.sidenav').sidenav();
     //$('label select').formSelect({ classes: 'row col s10' });
 })
 
@@ -279,7 +281,7 @@ let taskTable = $("#task-dataTable").DataTable({
     ],
     select: 'multi',
     "ajax": {
-        url: "api/v1/Scheduler",
+        url: "/api/v1/Scheduler",
         dataSrc: ""
     },
     "columns": [

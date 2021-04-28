@@ -7,9 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CalWebApi.Database
 {
-    public class ScheduleLogsContext : DbContext
+    public class SchdulerDbContext : DbContext
     {
         public DbSet<ScheduleLogsModel> ExecutionLogs { get; set; }
+
+        //public DbSet<>
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite(@"Data Source=AppDb.db3");

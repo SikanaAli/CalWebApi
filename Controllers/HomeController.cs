@@ -28,7 +28,7 @@ namespace CalWebApi.Controllers
             return View();
         }
 
-        public IActionResult Calendar()
+        public IActionResult Scheduler()
         {
             return View();
         }
