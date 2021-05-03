@@ -119,14 +119,22 @@ body {
 .brand-logo {
     left: 70px;
     margin-top:0;
-    margin-bottom:0
+    margin-bottom:0;
+    line-height:17px
+}
+
+.sub-tagline {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+}
+
+br{
+    margin:0;
 }
 /*NavBar
  *******/
-.container-fluid{
+.container-fluid {
     margin: 0 auto;
-   
-    
 }
 
 
@@ -148,15 +156,61 @@ body {
     bottom: 2.5px !important;
 }
 
-/*Side Nav
- **********/
-.sidenav-logo{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding-top:1rem;
-    padding-bottom:1rem;
+.nav-wrapper{
+    font-size: unset
 }
+
+
+.breadcrumb-wrapper-inner{
+    padding:5px 20px 5px 20px;
+    z-index:0;
+}
+
+
+.breadcrumb-wrapper {
+    opacity: 0.9;
+}
+.breadcrumb-wrapper-inner > * {
+    font-size: small;
+    font-style: italic;
+    vertical-align: top;
+   
+}
+@media only screen and (min-width: 600px) {
+    .wrap-line {
+        display: block;
+        /*padding: 7px 45px;*/
+    }
+}
+
+.wrap-line {
+    
+    color: #FFF;
+    display: block;
+    letter-spacing: 0.1rem;
+}
+
+.breadcrumb {
+    font-family: 'Roboto','Roboto-Regular','Roboto-Thin';
+}
+
+.breadcrumb:before{
+    font-size:unset;
+}
+.main-nav {
+    box-shadow: 0 2px 10px 0 rgba(0,0,0,1)!important;
+   
+}
+
+    /*Side Nav
+ **********/
+    .sidenav-logo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
 
 .user-view a {
     text-decoration: none

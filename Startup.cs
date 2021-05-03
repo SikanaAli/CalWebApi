@@ -22,7 +22,7 @@ using System.Collections.Specialized;
 using Microsoft.Data.Sqlite;
 using CrystalQuartz.AspNetCore;
 using CrystalQuartz.Application;
-using Quartzmin;
+using Microsoft.AspNetCore.HttpOverrides;
 
 
 namespace CalWebApi
@@ -97,6 +97,10 @@ namespace CalWebApi
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            }) ;
 
             app.UseSwagger(S =>
             {
